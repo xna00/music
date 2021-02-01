@@ -1,8 +1,7 @@
+import User from "../models/User";
+import assert from "http-assert";
+import jwt from "jsonwebtoken";
 export default (options?) => {
-  const assert = require("http-assert");
-  const jwt = require("jsonwebtoken");
-  const AdminUser = require("../models/AdminUser");
-
   return async (req, res, next) => {
     const token = String(req.headers.authorization || "")
       .split(" ")
@@ -10,7 +9,7 @@ export default (options?) => {
     assert(token, 401, "请先登录");
     const { id } = jwt.verify(token, req.app.get("secret"));
     assert(id, 401, "请先登录");
-    req.user = await AdminUser.findById(id);
+    req.user = await User.findById(id);
     assert(req.user, 401, "请先登录");
     await next();
   };
