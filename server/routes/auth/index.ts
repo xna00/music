@@ -2,6 +2,7 @@ import express = require("express");
 import User from "../../models/User";
 import jwt from "jsonwebtoken";
 import assert = require("http-assert");
+import errorHandler from "../../middleware/errorHandler";
 
 module.exports = (app) => {
   const router = express.Router();
@@ -25,15 +26,7 @@ module.exports = (app) => {
     res.send({ token });
   });
 
-  router.use((err, req, res, next) => {
-    if (err.message.includes("E11000")) {
-      err.statusCode = 422;
-      err.message = "用户名已存在";
-    }
-    res.status(err.statusCode || 500).send({
-      message: err.message,
-    });
-  });
+  router.use(errorHandler());
 
   app.use("/auth", router);
 };
