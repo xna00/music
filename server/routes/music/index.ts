@@ -7,6 +7,7 @@ module.exports = (app) => {
   router.get("/suggestions", (req, res) => {
     res.send("suggestions");
   });
+
   router.get("/:source", async (req, res) => {
     const { source } = req.params;
     console.log(req.query);
@@ -14,10 +15,12 @@ module.exports = (app) => {
     res.send(result);
   });
 
-  router.get("/:source/:id", async (req, res) => {
-    const { source, id } = req.params;
-    const result = await sources[source].getDetail(id);
-    res.send(result) 
+  router.post("/detail", async (req, res) => {
+    const { source } = req.body;
+    const music = req.body;
+    const result = await sources[source].getDetail(music);
+    res.send(result);
   });
+
   app.use("/api/music", router);
 };

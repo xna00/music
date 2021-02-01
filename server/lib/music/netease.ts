@@ -67,15 +67,17 @@ const searchMusic = async (keyword: string) => {
   const result = await request(search);
   let rawData: any;
   rawData = JSON.parse(result);
-  let data: Music[] = rawData.result.songs.map((song) => ({
+  const data: Music[] = rawData.result.songs.map((song) => ({
     id: song.id.toString(),
+    source: "netease",
     name: song.name,
     album: song.al.name,
     artists: song.ar.map((a) => a.name),
   }));
-  return Promise.resolve(data);
+  return data;
 };
-const getDetail = async (id: string) => {
+const getDetail = async (music: Music) => {
+  const { id } = music;
   let [detail, lyric]: [any, any] = await Promise.all([
     http.get(`http://music.163.com/api/song/detail/?id=${id}&ids=[${id}]`),
     http.get(
@@ -87,16 +89,13 @@ const getDetail = async (id: string) => {
   lyric = lyric.lrc.lyric;
   const song = detail.songs[0];
 
-  const music: MusicDetail = {
-    id,
-    name: song.name,
-    artists: song.artists.map((a) => a.name),
-    album: song.album.name,
+  const musicDetail: MusicDetail = {
+    ...music,
     audioUrl: "https://music.163.com/song/media/outer/url?id=" + id + ".mp3",
     imageUrl: song.album.picUrl,
     lyric,
   };
-  return music;
+  return musicDetail;
 };
 const netease: Source = {
   search: searchMusic,

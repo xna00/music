@@ -4,12 +4,13 @@ export class Source {
   search(keyword: string) {
     return Promise.resolve([new Music()]);
   }
-  getDetail(id: string) {
+  getDetail(music: Music) {
     return Promise.resolve(new MusicDetail());
   }
 }
 export class Music {
   id = "";
+  source = "";
   name = "";
   album = "";
   artists: string[] = [];
