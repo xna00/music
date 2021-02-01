@@ -2,7 +2,7 @@ import { MusicDetail } from "./../lib/music/index";
 import mongoose, { Document } from "mongoose";
 
 const schema = new mongoose.Schema<MusicDetail & Document>({
-  id: { type: String },
+  id: { type: String, unique: true },
   source: { type: String },
   name: { type: String },
   artists: [{ type: String }],

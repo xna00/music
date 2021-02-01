@@ -10,14 +10,13 @@ module.exports = (app) => {
 
   router.get("/:source", async (req, res) => {
     const { source } = req.params;
-    const result = await sources[source].search(req.query.keyword);
+    const result = await sources.search(source, req.query.keyword as string);
     res.send(result);
   });
 
   router.post("/detail", async (req, res) => {
-    const { source } = req.body;
     const music = req.body;
-    const result = await sources[source].getDetail(music);
+    const result = await sources.getDetail(music);
     res.send(result);
   });
 
