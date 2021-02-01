@@ -1,4 +1,5 @@
 import express = require("express");
+import sources from "../../lib/music";
 module.exports = (app) => {
   const router = express.Router({
     mergeParams: true,
@@ -6,18 +7,17 @@ module.exports = (app) => {
   router.get("/suggestions", (req, res) => {
     res.send("suggestions");
   });
-  router.get("/:source", (req, res) => {
-    res.send({
-      source: req.params.source,
-    });
+  router.get("/:source", async (req, res) => {
+    const { source } = req.params;
+    console.log(req.query);
+    const result = await sources[source].search(req.query.keyword);
+    res.send(result);
   });
 
-  router.get("/:source/:id", (req, res) => {
+  router.get("/:source/:id", async (req, res) => {
     const { source, id } = req.params;
-    res.send({
-      source,
-      id,
-    });
+    const result = await sources[source].getDetail(id);
+    res.send(result) 
   });
   app.use("/api/music", router);
 };
