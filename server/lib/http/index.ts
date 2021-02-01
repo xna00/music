@@ -11,7 +11,7 @@ const _request = (url: string, method, headers = {}, postData = {}) => {
   const hostname = url.substring(0, url.indexOf("/"));
   url = url.replace(hostname, "");
   const path = url;
-//   console.log(protocol, hostname, path);
+  // console.log(protocol, use, method, hostname, path, headers);
   return new Promise<string>((resolve, reject) => {
     const request = use.request(
       {
@@ -43,8 +43,11 @@ const _request = (url: string, method, headers = {}, postData = {}) => {
     request.end();
   });
 };
-const get = (url: string, query = {}, headers = {}) => {
-  url += querystring.stringify(query);
+const get = (url: string, query?, headers = {}) => {
+  if (query && JSON.stringify(query) !== "{}") {
+    url.includes("?") ? (url += "&") : (url += "?");
+    url += querystring.stringify(query);
+  }
   return _request(url, "GET", headers);
 };
 const post = (url: string, postData = {}, headers = {}) => {
