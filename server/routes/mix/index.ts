@@ -22,7 +22,7 @@ export default (app) => {
   });
 
   router.get("/:id", async (req, res) => {
-    const mix = await Mix.findById(req.params.id).populate("Music");
+    const mix = await Mix.findById(req.params.id).populate("music");
     res.send(mix);
   });
 
