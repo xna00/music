@@ -10,7 +10,6 @@ module.exports = (app) => {
 
   router.get("/:source", async (req, res) => {
     const { source } = req.params;
-    console.log(req.query);
     const result = await sources[source].search(req.query.keyword);
     res.send(result);
   });

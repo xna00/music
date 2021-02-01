@@ -1,4 +1,5 @@
 import netease from "./netease";
+import qq from './qq'
 
 export class Source {
   search(keyword: string) {
@@ -22,4 +23,5 @@ export class MusicDetail extends Music {
 }
 export default {
   netease,
+  qq
 };
