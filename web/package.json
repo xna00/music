@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "serve:mobile": "vue-cli-service serve ./src/mobile/main.ts",
+    "build:mobile": "vue-cli-service build ./src/mobile/main.ts --dest dist_mobile",
+    "serve:pc": "vue-cli-service serve ./src/pc/main.ts",
+    "build:pc": "vue-cli-service build ./src/pc/main.ts --dest dist_pc",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
