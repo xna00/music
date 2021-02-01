@@ -16,4 +16,4 @@ const schema = new mongoose.Schema<
   },
 });
 
-export default mongoose.model("AdminUser", schema);
+export default mongoose.model("User", schema);
