@@ -2,8 +2,11 @@ import express = require("express");
 import db from "./plugins/db";
 import user from "./routes/mix";
 import errorHandler from "./middleware/errorHandler";
+import cors from 'cors'
 
 const app = express();
+
+app.use(cors())
 app.use(express.json());
 
 app.set("secret", "riuep9qu8r4fjwoe");
