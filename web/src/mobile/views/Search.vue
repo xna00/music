@@ -4,7 +4,7 @@ import Header from "../components/Header.vue";
 import Icon from "../../components/Icon.vue";
 
 import http from "../../lib/http";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 
 // Import Swiper Vue.js components
@@ -35,7 +35,9 @@ export default {
       swiper = s;
     };
     const input = ref<HTMLInputElement>();
-    onMounted(() => {});
+    onMounted(() => {
+      watch(activeIndex, (newValue) => swiper.slideTo(newValue));
+    });
     const search = async () => {
       const keyword = input.value?.value;
       const source: any = sources.value[activeIndex.value];
@@ -72,6 +74,7 @@ export default {
           :key="source"
           class="flex-1 text-center pb-2"
           :class="{ active: index === activeIndex }"
+          @click="activeIndex = index"
         >
           {{ source.name }}
         </li>
@@ -88,13 +91,13 @@ export default {
                 v-for="(r, index) in source.result"
                 class="music px-3 d-flex jc-between ai-center py-2"
               >
-                  <div>
-                    <span class="name text-ellipsis">{{ r.name }}</span>
-                    <span class="info">{{ r.artists.join("/") }}</span>
-                  </div>
-                  <!-- <div> -->
-                    <Icon name="menu" />
-                  <!-- </div> -->
+                <div>
+                  <span class="name text-ellipsis">{{ r.name }}</span>
+                  <span class="info">{{ r.artists.join("/") }}</span>
+                </div>
+                <!-- <div> -->
+                <Icon name="menu" />
+                <!-- </div> -->
               </li>
             </ul>
           </div>
