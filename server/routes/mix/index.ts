@@ -38,5 +38,5 @@ export default (app) => {
   });
 
   router.use(errorHandler());
-  app.use("/mixes", authMiddleware(), router);
+  app.use("/api/mixes", authMiddleware(), router);
 };

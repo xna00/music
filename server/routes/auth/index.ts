@@ -24,5 +24,5 @@ module.exports = (app) => {
     res.send({ token });
   });
 
-  app.use("/auth", router);
+  app.use("/api/auth", router);
 };
