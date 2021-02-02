@@ -19,7 +19,7 @@ export default {
 <template>
   <Layout>
     <template v-slot:header>
-      <Header>
+      <Header class="bg-primary">
         <Icon name="menu" />
         <router-link to="/search">
           <Icon name="search" />

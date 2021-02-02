@@ -4,7 +4,11 @@
     <main class="flex-1">
       <slot />
     </main>
-    <slot name="footer"/>
+    <slot name="footer" />
   </div>
 </template>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+main {
+  overflow: auto;
+}
+</style>
