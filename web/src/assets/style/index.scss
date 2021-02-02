@@ -2,6 +2,8 @@
 
 // reset
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
   outline: none;
 }
@@ -14,6 +16,10 @@ body {
   line-height: 1.2em;
   background: #f1f1f1;
   -webkit-font-smoothing: antialiased;
+}
+ol,
+ul {
+  list-style: none;
 }
 a {
   color: #999;
