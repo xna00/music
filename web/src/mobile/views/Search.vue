@@ -4,6 +4,7 @@ import Header from "../components/Header.vue";
 import Icon from "../../components/Icon.vue";
 
 import http from "../../lib/http";
+import { playFromSearchPage } from "../../lib/audio";
 import { ref, onMounted, watch } from "vue";
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 
@@ -52,7 +53,15 @@ export default {
       activeIndex.value = swiper.activeIndex;
       search();
     };
-    return { input, sources, onSwiper, onSlideChange, activeIndex, search };
+    return {
+      input,
+      sources,
+      onSwiper,
+      onSlideChange,
+      activeIndex,
+      search,
+      playFromSearchPage,
+    };
   },
 };
 </script>
@@ -90,6 +99,7 @@ export default {
               <li
                 v-for="(r, index) in source.result"
                 class="music px-3 d-flex jc-between ai-center py-2"
+                @click="playFromSearchPage(r)"
               >
                 <div>
                   <span class="name text-ellipsis">{{ r.name }}</span>
