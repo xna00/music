@@ -27,6 +27,9 @@ const sourceMap = {
   qq,
 };
 export default {
+  getSources() {
+    return Object.keys(sourceMap);
+  },
   search(source: string, keyword: string) {
     return sourceMap[source].search(keyword);
   },

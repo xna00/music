@@ -4,6 +4,11 @@ module.exports = (app) => {
   const router = express.Router({
     mergeParams: true,
   });
+
+  router.get('/sources',(req,res)=>{
+    res.send(sources.getSources())
+  })
+
   router.get("/suggestions", (req, res) => {
     res.send("suggestions");
   });
