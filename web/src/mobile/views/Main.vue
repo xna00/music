@@ -2,10 +2,11 @@
 import { ref } from "vue";
 import Layout from "../components/Layout.vue";
 import Header from "../components/Header.vue";
+import Footer from "../components/Footer.vue";
 import Icon from "../../components/Icon.vue";
 import http from "../../lib/http";
 export default {
-  components: { Layout, Header, Icon },
+  components: { Layout, Header, Icon, Footer },
   setup() {
     const mixes = ref({});
     const fetch = async () => {
@@ -42,6 +43,7 @@ export default {
         <Icon name="menu" />
       </li>
     </ul>
+    <template v-slot:footer><Footer /></template>
   </Layout>
 </template>
 <style lang="scss" scoped>

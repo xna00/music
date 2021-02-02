@@ -12,24 +12,12 @@ export class MusicDetail extends Music {
   imageUrl = "";
   lyric = "";
 }
+let firstTimeIndexChange = true;
 const playlist = ref<Music[]>([]);
 playlist.value = JSON.parse(localStorage.playlist || "[]");
 
 const index = ref<number>(0);
-index.value = localStorage.index || 0;
 
-const currentMusic = ref<MusicDetail>();
-watch(
-  playlist,
-  (newPlaylist) => {
-    localStorage.playlist = JSON.stringify(newPlaylist);
-    console.log('deep');
-    
-  },
-  {
-    deep: true,
-  }
-);
 watch([playlist, index], async ([newPlaylist, newIndex]: any) => {
   console.log(newPlaylist === playlist.value, newIndex);
   //index changed
@@ -39,13 +27,54 @@ watch([playlist, index], async ([newPlaylist, newIndex]: any) => {
   const musicDetail = (
     await http.post("/music/detail", playlist.value[index.value])
   ).data;
+
   currentMusic.value = musicDetail;
-  //   return await http.post("/music/detail", playlist.value[index.value]);
+  let lyric: { time: number; text: string }[] = musicDetail.lyric.split("\n");
+  lyric = lyric.map((l) => {
+    let [timeString, text]: any = l.toString().split("]");
+    timeString = timeString.replace("[", "");
+    timeString = timeString.split(":");
+    let time = timeString.reduce((previousValue, currentValue) => {
+      previousValue *= 60;
+      previousValue += parseFloat(currentValue) || 0;
+      return previousValue;
+    }, 0);
+    text = text.trim();
+    return {
+      time,
+      text,
+    };
+  });
+  lyric = lyric.filter((l) => l.text);
+  currentMusic!.value!.parsedLyric = lyric;
+
   audio.src = currentMusic.value?.audioUrl || "";
   audio.load();
+  if (firstTimeIndexChange) {
+    firstTimeIndexChange = false;
+    return;
+  }
   audio.play();
 });
 
+index.value = localStorage.index || 0;
+
+const currentMusic = ref<
+  MusicDetail & {
+    parsedLyric: { time: number; text: string }[];
+    currentLyricIndex: number;
+  }
+>();
+watch(
+  playlist,
+  (newPlaylist) => {
+    localStorage.playlist = JSON.stringify(newPlaylist);
+    console.log("deep");
+  },
+  {
+    deep: true,
+  }
+);
 const audio = new Audio();
 currentMusic.value && (audio.src = currentMusic.value.audioUrl);
 
@@ -53,14 +82,31 @@ const currentTime = ref<number>(0);
 
 const duration = ref<number>(0);
 
-let checker;
+audio.addEventListener(
+  "durationchange",
+  () => (duration.value = audio.duration)
+);
+
+audio.addEventListener("timeupdate", () => {
+  audio.currentTime - currentTime.value > 0.5 &&
+    (currentTime.value = audio.currentTime);
+  if (currentMusic.value && currentMusic.value.parsedLyric) {
+    let i;
+    for (
+      i = currentMusic.value.parsedLyric.length - 1;
+      currentTime.value < currentMusic.value.parsedLyric[i].time;
+      i--
+    ) {}
+    currentMusic.value.currentLyricIndex = i;
+  }
+});
+const playing = ref<boolean>(false);
+
+audio.addEventListener("playing", () => (playing.value = true));
+audio.addEventListener("pause", () => (playing.value = false));
 
 const play = () => {
   audio.play();
-  checker = setInterval(() => {
-    currentTime.value = audio.currentTime;
-    duration.value = audio.duration;
-  });
 };
 function findMusic(music: MusicDetail | Music, mix?: any[]) {
   !mix && (mix = playlist.value);
@@ -79,7 +125,6 @@ async function playFromSearchPage(music: Music) {
 
 const pause = () => {
   audio.pause();
-  clearInterval(checker);
 };
 let modes = ["单曲循环", "顺序播放", "随机播放"];
 const mode = ref<number>(0);
@@ -124,6 +169,7 @@ export {
   currentMusic,
   currentTime,
   duration,
+  playing,
   play,
   pause,
   mode,
