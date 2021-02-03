@@ -27,7 +27,7 @@ watch([playlist, index], async ([newPlaylist, newIndex]: any) => {
   const musicDetail = (
     await http.post("/music/detail", playlist.value[index.value])
   ).data;
-
+  console.log(musicDetail);
   currentMusic.value = musicDetail;
   let lyric: { time: number; text: string }[] = musicDetail.lyric
     .trim()

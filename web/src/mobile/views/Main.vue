@@ -5,15 +5,12 @@ import Header from "../components/Header.vue";
 import Footer from "../components/Footer.vue";
 import Icon from "../../components/Icon.vue";
 import http from "../../lib/http";
+import { mixes, getMixes, addMix } from "../../lib/mix";
 export default {
   components: { Layout, Header, Icon, Footer },
   setup() {
-    const mixes = ref({});
-    const fetch = async () => {
-      mixes.value = (await http.get("/mixes")).data;
-    };
-    fetch();
-    return { mixes };
+    getMixes();
+    return { mixes, addMix };
   },
 };
 </script>
@@ -28,9 +25,9 @@ export default {
       </Header>
     </template>
     <header class="px-3 pt-2 d-flex ai-center jc-between">
-      <div class="text">我的歌单 ({{ mixes.length }})</div>
+      <div class="text">我的歌单 ({{ mixes?.length }})</div>
       <div>
-        <Icon name="add" class="mr-3" />
+        <Icon @click="addMix(Date.now())" name="add" class="mr-3" />
         <Icon name="3dot" />
       </div>
     </header>
@@ -39,7 +36,7 @@ export default {
         v-for="mix in mixes"
         :key="mix._id"
         @click="$router.push('/mix/' + mix._id)"
-        class="d-flex ai-center"
+        class="d-flex ai-center pb-2"
       >
         <img
           src="http://p4.music.126.net/66TVKnEXRyT3s1AOHnf1Mw==/84662395345207.jpg?param=34y34"

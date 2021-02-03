@@ -16,6 +16,7 @@ import {
   mode,
   changeMode,
 } from "../../lib/audio";
+import { likeMusic } from "../../lib/mix";
 import { computed, onMounted, ref, watch } from "vue";
 export default {
   components: { Layout, Header, Icon, LinearSeekBar },
@@ -122,6 +123,7 @@ export default {
       selectedIndex,
       seekBySeeker,
       scrolling,
+      likeMusic,
     };
   },
 };
@@ -181,7 +183,7 @@ export default {
       <template v-slot:footer>
         <div class="action-1">
           <div class="py-2 d-flex jc-around">
-            <Icon name="heart" />
+            <Icon @click="likeMusic(currentMusic)" name="heart" />
             <Icon name="3dot-menu" />
           </div>
         </div>
