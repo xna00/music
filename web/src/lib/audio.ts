@@ -97,9 +97,10 @@ audio.addEventListener("timeupdate", () => {
     let i;
     for (
       i = currentMusic.value.parsedLyric.length - 1;
-      currentTime.value < currentMusic.value.parsedLyric[i].time;
+      i >= 0 && currentTime.value < currentMusic.value.parsedLyric[i].time;
       i--
     ) {}
+    i < 0 && (i = 0);
     currentMusic.value.currentLyricIndex = i;
   }
 });
