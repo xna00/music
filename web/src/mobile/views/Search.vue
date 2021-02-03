@@ -1,6 +1,7 @@
 <script lang="ts">
 import Layout from "../components/Layout.vue";
 import Header from "../components/Header.vue";
+import Footer from "../components/Footer.vue";
 import Icon from "../../components/Icon.vue";
 
 import http from "../../lib/http";
@@ -20,7 +21,7 @@ import "swiper/components/scrollbar/scrollbar.scss";
 // install Swiper components
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 export default {
-  components: { Layout, Header, Icon, Swiper, SwiperSlide },
+  components: { Layout, Header, Icon, Swiper, SwiperSlide, Footer },
   setup() {
     const sources = ref([]);
     const fetchSources = async () => {
@@ -114,6 +115,7 @@ export default {
         </swiper-slide>
       </swiper>
     </div>
+    <template v-slot:footer><Footer /></template>
   </Layout>
 </template>
 <style lang="scss" scoped>
