@@ -18,7 +18,10 @@ export default {
 };
 </script>
 <template>
-  <div class="footer d-flex ai-center px-2 pb-2 pt-1">
+  <div
+    @click="$router.push('/play')"
+    class="footer d-flex ai-center px-2 pb-2 pt-1"
+  >
     <img :src="currentMusic?.imageUrl" alt="" />
     <div class="info">
       <span class="fs-lg">{{ currentMusic?.name }}</span>
@@ -26,7 +29,11 @@ export default {
         currentMusic?.parsedLyric[currentMusic?.currentLyricIndex]?.text
       }}</span>
     </div>
-    <Icon @click="toggle" class="mr-2" :name="playing ? 'pause' : 'play'" />
+    <Icon
+      @click.stop="toggle"
+      class="mr-2"
+      :name="playing ? 'pause' : 'play'"
+    />
     <Icon name="menu" />
   </div>
 </template>
