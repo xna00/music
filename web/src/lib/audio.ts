@@ -130,9 +130,9 @@ const pause = () => {
 };
 let modes = ["单曲循环", "顺序播放", "随机播放"];
 const mode = ref<number>(0);
-
+mode.value = parseInt(localStorage.mode) || 0;
 watch(mode, () => {
-  console.log(mode);
+  localStorage.mode = mode.value;
 });
 
 const changeMode = () => {
