@@ -52,7 +52,6 @@ watch([playlist, index], async ([newPlaylist, newIndex]: any) => {
 
   audio.src = currentMusic.value?.audioUrl || "";
   audio.load();
-  currentTime.value = 0;
   if (firstTimeIndexChange) {
     firstTimeIndexChange = false;
     return;
@@ -91,8 +90,7 @@ audio.addEventListener(
 );
 
 audio.addEventListener("timeupdate", () => {
-  audio.currentTime - currentTime.value > 0.5 &&
-    (currentTime.value = audio.currentTime);
+  currentTime.value = audio.currentTime;
   if (currentMusic.value && currentMusic.value.parsedLyric) {
     let i;
     for (
@@ -151,7 +149,6 @@ function previous() {
 }
 
 function endedHandler() {
-  currentTime.value = 0;
   switch (mode.value) {
     case 0:
       audio.play();
