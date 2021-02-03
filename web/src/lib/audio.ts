@@ -29,7 +29,10 @@ watch([playlist, index], async ([newPlaylist, newIndex]: any) => {
   ).data;
 
   currentMusic.value = musicDetail;
-  let lyric: { time: number; text: string }[] = musicDetail.lyric.split("\n");
+  let lyric: { time: number; text: string }[] = musicDetail.lyric
+    .trim()
+    .split("\n");
+  console.log(lyric);
   lyric = lyric.map((l) => {
     let [timeString, text]: any = l.toString().split("]");
     timeString = timeString.replace("[", "");
@@ -39,6 +42,7 @@ watch([playlist, index], async ([newPlaylist, newIndex]: any) => {
       previousValue += parseFloat(currentValue) || 0;
       return previousValue;
     }, 0);
+    console.log(time, text);
     text = text.trim();
     return {
       time,
@@ -50,6 +54,7 @@ watch([playlist, index], async ([newPlaylist, newIndex]: any) => {
 
   audio.src = currentMusic.value?.audioUrl || "";
   audio.load();
+  currentTime.value = 0;
   if (firstTimeIndexChange) {
     firstTimeIndexChange = false;
     return;
