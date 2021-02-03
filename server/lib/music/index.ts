@@ -34,17 +34,16 @@ export default {
     return sourceMap[source].search(keyword);
   },
   async getDetail(music: Music) {
-    // let musicDetail =
-    await MusicModel.findOne({
+    let musicDetail = await MusicModel.findOne({
       id: music.id,
     });
-    let musicDetail;
-    console.log(music.id);
-
-    // if (!musicDetail) {
-    musicDetail = await sourceMap[music.source].getDetail(music);
-    // await MusicModel.create(musicDetail);
-    // }
+    console.log(musicDetail);
+    let newMusicDetail = await sourceMap[music.source].getDetail(music);
+    if (!musicDetail) {
+      musicDetail = await MusicModel.create(newMusicDetail);
+    }
+    musicDetail.audioUrl = newMusicDetail.audioUrl;
+    musicDetail.save();
     return musicDetail;
   },
 };
