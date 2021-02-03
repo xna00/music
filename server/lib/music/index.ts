@@ -34,9 +34,10 @@ export default {
     return sourceMap[source].search(keyword);
   },
   async getDetail(music: Music) {
-    // let musicDetail = await MusicModel.findOne({
-    //   id: music.id,
-    // });
+    // let musicDetail =
+    await MusicModel.findOne({
+      id: music.id,
+    });
     let musicDetail;
     console.log(music.id);
 
