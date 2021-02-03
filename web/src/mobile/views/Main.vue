@@ -27,7 +27,13 @@ export default {
         </router-link>
       </Header>
     </template>
-    <header>我的歌单 ({{ mixes.length }})</header>
+    <header class="px-3 pt-2 d-flex ai-center jc-between">
+      <div class="text">我的歌单 ({{ mixes.length }})</div>
+      <div>
+        <Icon name="add" class="mr-3"/>
+        <Icon name="3dot" />
+      </div>
+    </header>
     <ul class="px-3 pt-2">
       <li v-for="mix in mixes" :key="mix._id" class="d-flex ai-center">
         <img
@@ -47,6 +53,10 @@ export default {
   </Layout>
 </template>
 <style lang="scss" scoped>
+header {
+  font-size: 18px;
+  font-weight: bolder;
+}
 ul {
   font-size: 20px;
 }
