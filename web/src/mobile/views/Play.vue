@@ -134,7 +134,7 @@ export default {
     />
     <Layout>
       <template v-slot:header>
-        <Header>
+        <Header class="pt-1">
           <Icon @click="$router.back" name="left" />
           <div class="info">
             <span>{{ currentMusic.name }}</span>

@@ -20,7 +20,7 @@ export default {
 <template>
   <Layout>
     <template v-slot:header>
-      <Header class="bg-primary">
+      <Header class="bg-primary py-3">
         <Icon name="menu" />
         <router-link to="/search">
           <Icon name="search" />

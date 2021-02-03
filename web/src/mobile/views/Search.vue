@@ -69,7 +69,7 @@ export default {
 <template>
   <Layout>
     <template v-slot:header>
-      <Header class="bg-primary text-white">
+      <Header class="bg-primary text-white py-3">
         <router-link to="/main">
           <Icon name="left" />
         </router-link>
