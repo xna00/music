@@ -8,7 +8,7 @@ export default {
 };
 </script>
 <template>
-  <li class="music px-3 d-flex jc-between ai-center py-2">
+  <li class="music px-3 d-flex jc-between ai-center py-2 flex-1">
     <div>
       <span class="name text-ellipsis">{{ music.name }}</span>
       <span class="info">{{ music.artists.join("/") }}</span>

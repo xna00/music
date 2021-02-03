@@ -30,12 +30,17 @@ export default {
     <header class="px-3 pt-2 d-flex ai-center jc-between">
       <div class="text">我的歌单 ({{ mixes.length }})</div>
       <div>
-        <Icon name="add" class="mr-3"/>
+        <Icon name="add" class="mr-3" />
         <Icon name="3dot" />
       </div>
     </header>
     <ul class="px-3 pt-2">
-      <li v-for="mix in mixes" :key="mix._id" class="d-flex ai-center">
+      <li
+        v-for="mix in mixes"
+        :key="mix._id"
+        @click="$router.push('/mix/' + mix._id)"
+        class="d-flex ai-center"
+      >
         <img
           src="http://p4.music.126.net/66TVKnEXRyT3s1AOHnf1Mw==/84662395345207.jpg?param=34y34"
           alt=""

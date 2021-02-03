@@ -116,13 +116,17 @@ function findMusic(music: MusicDetail | Music, mix?: any[]) {
     return m.id === music.id && m.source === music.source;
   });
 }
-async function playFromSearchPage(music: Music) {
+function playFromSearchPage(music: Music) {
   if (findMusic(music) >= 0) {
     index.value = findMusic(music);
     return;
   }
   playlist.value.splice(index.value + 1, 0, music);
   next();
+}
+function palyFromMixPage(musics: Music[], newIndex: number) {
+  playlist.value = musics;
+  index.value = newIndex;
 }
 
 const pause = () => {
@@ -184,4 +188,5 @@ export {
   next,
   previous,
   playFromSearchPage,
+  palyFromMixPage,
 };
