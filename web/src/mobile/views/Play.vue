@@ -16,7 +16,7 @@ import {
   mode,
   changeMode,
 } from "../../lib/audio";
-import { computed } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 export default {
   components: { Layout, Header, Icon, LinearSeekBar },
 
@@ -39,6 +39,63 @@ export default {
     const process = computed(() => currentTime.value / duration.value);
 
     const modeIcon = ["single-2", "xunhuan", "jiaochahulianxiang"];
+
+    const imageVisible = ref(false);
+    const showToggle = () => (imageVisible.value = !imageVisible.value);
+
+    const ul = ref<HTMLUListElement>();
+    const scroll = () => {
+      if (!ul.value || !currentMusic.value) return;
+      const lyricWrapper = ul.value.parentElement;
+      lyricWrapper!.scrollTop =
+        (ul.value.children[
+          currentMusic.value.currentLyricIndex
+        ] as HTMLLIElement).offsetTop -
+        (ul.value.firstElementChild as HTMLLIElement).offsetTop;
+    };
+    watch(
+      currentMusic,
+      () => {
+        if (scrolling.value) return;
+        scroll();
+      },
+      { deep: true }
+    );
+    let scrolling = ref(false);
+    let cancelScrolling;
+    const selectedIndex = ref(-1);
+    const onTouchmove = (e) => {
+      clearTimeout(cancelScrolling);
+      scrolling.value = true;
+      if (ul.value) {
+        let i = 0;
+        const liList = ul.value.children;
+        for (
+          i = liList.length - 1;
+          i >= 0 &&
+          ul.value.parentElement!.scrollTop <
+            (liList[i] as HTMLLIElement).offsetTop -
+              (liList[i] as HTMLLIElement).offsetHeight / 2 -
+              (ul.value.firstElementChild as HTMLLIElement).offsetTop;
+          i--
+        ) {}
+        i < 0 && (i = 0);
+        selectedIndex.value = i;
+      }
+      cancelScrolling = setTimeout(() => {
+        scrolling.value = false;
+        scroll();
+        selectedIndex.value = -1;
+      }, 3000);
+    };
+    const seekBySeeker = () => {
+      if (currentMusic.value) {
+        seek(
+          currentMusic.value.parsedLyric[selectedIndex.value].time /
+            duration.value
+        );
+      }
+    };
     return {
       modeIcon,
       currentMusic,
@@ -53,6 +110,13 @@ export default {
       mode,
       changeMode,
       timeFormat,
+      imageVisible,
+      showToggle,
+      onTouchmove,
+      ul,
+      selectedIndex,
+      seekBySeeker,
+      scrolling,
     };
   },
 };
@@ -66,7 +130,7 @@ export default {
     <Layout>
       <template v-slot:header>
         <Header>
-          <Icon name="left" />
+          <Icon @click="$router.back" name="left" />
           <div class="info">
             <span>{{ currentMusic.name }}</span>
             <span>{{ currentMusic.artists.join("/") }}</span>
@@ -74,12 +138,55 @@ export default {
           <Icon />
         </Header>
       </template>
-
+      <div @click="showToggle" class="main-wrapper h-100">
+        <div class="img-wrapper" :class="{ invisible: !imageVisible }">
+          <img
+            :src="currentMusic.imageUrl"
+            :style="{ animationPlayState: playing ? 'running' : 'paused' }"
+          />
+        </div>
+        <div
+          ref="lyricWrapper"
+          class="lyric-wrapper"
+          :class="{ invisible: imageVisible }"
+          @touchmove="onTouchmove"
+        >
+          <div
+            v-if="scrolling"
+            class="seeker"
+            :data-time="
+              timeFormat(currentMusic.parsedLyric[selectedIndex].time)
+            "
+            @click.stop="seekBySeeker"
+          />
+          <ul ref="ul">
+            <li
+              v-for="(lrc, i) in currentMusic.parsedLyric"
+              :key="lrc.time"
+              :class="{
+                active: i === currentMusic.currentLyricIndex,
+                selected: i === selectedIndex,
+              }"
+            >
+              {{ lrc.text }}
+            </li>
+          </ul>
+        </div>
+      </div>
       <template v-slot:footer>
-        <div class="action-1"></div>
+        <div class="action-1">
+          <div class="py-2 d-flex jc-around">
+            <Icon name="menu" />
+            <Icon name="menu" />
+          </div>
+        </div>
         <div class="seekbar-wrapper d-flex jc-between ai-center">
           <span class="px-2">{{ formatedCurrentTime }}</span>
-          <LinearSeekBar @seek="seek" :process="process" />
+          <LinearSeekBar
+            @seek="seek"
+            :process="process"
+            backgroundColor="white"
+          />
           <span class="px-2">{{ formatedDuration }}</span>
         </div>
         <div class="action-2 py-3 d-flex jc-around ai-center">
@@ -94,17 +201,91 @@ export default {
   </div>
 </template>
 <style lang="scss" scoped>
-.seekbar-wrapper {
-  span {
-    &:first-child {
+@keyframes rotate {
+  from {
+    transform: rotateZ(0);
+  }
+  to {
+    transform: rotateZ(360deg);
+  }
+}
+.invisible {
+  opacity: 0;
+}
+.main-wrapper {
+  overflow: auto;
+  position: relative;
+  .img-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s;
+    > img {
+      width: 200px;
+      border-radius: 50%;
+      animation: rotate 30s linear infinite;
     }
   }
-  .seekbar {
-    background: chartreuse;
+
+  .lyric-wrapper {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    scroll-behavior: smooth;
+    transition: opacity 0.3s;
+    box-shadow: 0px 200px 35px 59px rgba(255, 255, 255, 0.01) inset;
+    .seeker {
+      position: absolute;
+      background: red;
+      width: 80%;
+      height: 1px;
+      left: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+      &::before {
+        content: " ";
+        // display: block;
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        left: -25px;
+        top: 50%;
+        transform: translateY(-50%);
+        border: 8px solid transparent;
+        border-left-color: black;
+      }
+      &::after {
+        content: attr(data-time);
+        position: absolute;
+        left: 102%;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+    > ul {
+      padding: 61% 0;
+      text-align: center;
+      font-size: 16px;
+      font-weight: bolder;
+      line-height: 2em;
+      color: white;
+      .selected {
+        color: green;
+      }
+      .active {
+        color: red;
+      }
+    }
   }
+}
+.action-1 {
+  font-size: 20px;
+  color: white;
 }
 .action-2 {
   font-size: 25px;
+  color: white;
   svg {
     &:nth-child(3) {
       font-size: 45px;
