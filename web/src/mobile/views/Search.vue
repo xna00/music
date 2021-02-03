@@ -3,6 +3,7 @@ import Layout from "../components/Layout.vue";
 import Header from "../components/Header.vue";
 import Footer from "../components/Footer.vue";
 import Icon from "../../components/Icon.vue";
+import Music from "../components/Music.vue";
 
 import http from "../../lib/http";
 import { playFromSearchPage } from "../../lib/audio";
@@ -14,14 +15,11 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 
 // Import Swiper styles
 import "swiper/swiper.scss";
-import "swiper/components/navigation/navigation.scss";
-import "swiper/components/pagination/pagination.scss";
-import "swiper/components/scrollbar/scrollbar.scss";
 
 // install Swiper components
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 export default {
-  components: { Layout, Header, Icon, Swiper, SwiperSlide, Footer },
+  components: { Layout, Header, Icon, Swiper, SwiperSlide, Footer, Music },
   setup() {
     const sources = ref([]);
     const fetchSources = async () => {
@@ -97,19 +95,11 @@ export default {
         <swiper-slide v-for="source in sources">
           <div class="wrapper">
             <ul>
-              <li
+              <Music
                 v-for="(r, index) in source.result"
-                class="music px-3 d-flex jc-between ai-center py-2"
                 @click="playFromSearchPage(r)"
-              >
-                <div>
-                  <span class="name text-ellipsis">{{ r.name }}</span>
-                  <span class="info">{{ r.artists.join("/") }}</span>
-                </div>
-                <!-- <div> -->
-                <Icon name="menu" />
-                <!-- </div> -->
-              </li>
+                :music="r"
+              />
             </ul>
           </div>
         </swiper-slide>
@@ -120,11 +110,6 @@ export default {
 </template>
 <style lang="scss" scoped>
 @import "@/assets/style/_variables.scss";
-.info {
-  > span {
-    display: block;
-  }
-}
 input {
   background: transparent;
   border: none;
@@ -133,23 +118,6 @@ input {
 .wrapper {
   overflow: auto;
   height: 100%;
-
-  .music {
-    font-size: 20px;
-    > div {
-      overflow: hidden;
-    }
-    span {
-      display: block;
-      overflow: hidden;
-    }
-    .name {
-      font-size: 16px;
-    }
-    .info {
-      font-size: 10px;
-    }
-  }
 }
 .swiper-container {
   width: 100%;
