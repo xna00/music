@@ -45,7 +45,12 @@ export default {
 
     const ul = ref<HTMLUListElement>();
     const scroll = () => {
-      if (!ul.value || !currentMusic.value) return;
+      if (
+        !ul.value ||
+        !currentMusic.value ||
+        !ul.value.children[currentMusic.value.currentLyricIndex]
+      )
+        return;
       const lyricWrapper = ul.value.parentElement;
       lyricWrapper!.scrollTop =
         (ul.value.children[
