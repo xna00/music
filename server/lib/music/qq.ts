@@ -13,7 +13,7 @@ const search = async (keyword: string) => {
     name: song.songname,
     artists: song.singer.map((s) => s.name),
     album: song.albumname,
-    albumUrl: `https://imgcache.qq.com/music/photo/album_300/76/300_albumpic_${song.albumid}_0.jpg`,
+    imageUrl: `https://imgcache.qq.com/music/photo/album_300/76/300_albumpic_${song.albumid}_0.jpg`,
   }));
   return data;
 };
