@@ -10,6 +10,7 @@ import {
   playing,
   play,
   pause,
+  seek,
   previous,
   next,
   mode,
@@ -27,7 +28,6 @@ export default {
       const date = new Date(seconds * 1000);
       let m = date.getMinutes().toString();
       let s = date.getSeconds().toString();
-      console.log(m, s);
       m.length < 2 && (m = "0" + m);
       s.length < 2 && (s = "0" + s);
       s.length > 2 && (s = s.substr(0, 2));
@@ -49,6 +49,7 @@ export default {
       playing,
       previous,
       next,
+      seek,
       mode,
       changeMode,
       timeFormat,
@@ -78,7 +79,7 @@ export default {
         <div class="action-1"></div>
         <div class="seekbar-wrapper d-flex jc-between ai-center">
           <span class="px-2">{{ formatedCurrentTime }}</span>
-          <LinearSeekBar :process="process" />
+          <LinearSeekBar @seek="seek" :process="process" />
           <span class="px-2">{{ formatedDuration }}</span>
         </div>
         <div class="action-2 py-3 d-flex jc-around ai-center">

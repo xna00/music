@@ -32,7 +32,6 @@ watch([playlist, index], async ([newPlaylist, newIndex]: any) => {
   let lyric: { time: number; text: string }[] = musicDetail.lyric
     .trim()
     .split("\n");
-  console.log(lyric);
   lyric = lyric.map((l) => {
     let [timeString, text]: any = l.toString().split("]");
     timeString = timeString.replace("[", "");
@@ -42,7 +41,6 @@ watch([playlist, index], async ([newPlaylist, newIndex]: any) => {
       previousValue += parseFloat(currentValue) || 0;
       return previousValue;
     }, 0);
-    console.log(time, text);
     text = text.trim();
     return {
       time,
@@ -152,6 +150,7 @@ function previous() {
 }
 
 function endedHandler() {
+  currentTime.value = 0;
   switch (mode.value) {
     case 0:
       audio.play();
@@ -168,6 +167,10 @@ function endedHandler() {
 }
 audio.addEventListener("ended", endedHandler);
 
+function seek(scale) {
+  audio.currentTime = audio.duration * scale;
+}
+
 export {
   playlist,
   index,
@@ -177,6 +180,7 @@ export {
   playing,
   play,
   pause,
+  seek,
   mode,
   changeMode,
   next,

@@ -52,11 +52,12 @@ export default {
       const setLeftAndWidth = (left) => {
         indicator.value.style.left = left + "px";
         processElement.value.style.width = left + "px";
-        // context.emit( "update:process", parseFloat((left / barRect.width).toFixed(3)));
       };
+
       watchEffect(() => {
         setLeftAndWidth(barRect.width * props.process);
       });
+
       indicator.value.addEventListener("mousedown", () => (active = true));
       const moveHandler = (x) => {
         let left = x - barRect.left;
@@ -66,17 +67,25 @@ export default {
       };
       document.addEventListener("mousemove", (e) => {
         if (!active) return;
-        console.log(e);
         moveHandler(e.clientX);
       });
       indicator.value.addEventListener("touchmove", (e) =>
         moveHandler(e.touches[0].clientX)
       );
 
-      document.addEventListener("mouseup", (e) => (active = false));
+      const emitSeek = (e) => {
+        context.emit("seek", (e.clientX - barRect.left) / barRect.width);
+      };
+      indicator.value.addEventListener("touchend", (e) => {
+        emitSeek(e.changedTouches[0]);
+      });
+      document.addEventListener("mouseup", (e) => {
+        active && emitSeek(e);
+        active = false;
+      });
       bar.value.addEventListener("click", (e) => {
-        console.log(e);
         setLeftAndWidth(e.clientX - barRect.left);
+        emitSeek(e);
       });
     });
     return { bar, indicator, processElement };
