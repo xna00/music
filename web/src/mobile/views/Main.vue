@@ -40,7 +40,7 @@ export default {
           <span class="fs-lg">{{ mix.name }}</span>
           <span class="fs-sm">{{ mix.music.length }}首</span>
         </div>
-        <Icon name="menu" />
+        <Icon name="3dot" />
       </li>
     </ul>
     <template v-slot:footer><Footer /></template>

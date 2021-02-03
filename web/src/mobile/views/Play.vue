@@ -181,8 +181,8 @@ export default {
       <template v-slot:footer>
         <div class="action-1">
           <div class="py-2 d-flex jc-around">
-            <Icon name="menu" />
-            <Icon name="menu" />
+            <Icon name="heart" />
+            <Icon name="3dot-menu" />
           </div>
         </div>
         <div class="seekbar-wrapper d-flex jc-between ai-center">
@@ -199,7 +199,7 @@ export default {
           <Icon @click="previous" name="previous" />
           <Icon @click="toggle" :name="playing ? 'pause' : 'play'" />
           <Icon @click="next" name="next" />
-          <Icon name="menu" />
+          <Icon name="list" />
         </div>
       </template>
     </Layout>

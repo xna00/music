@@ -31,10 +31,10 @@ export default {
     </div>
     <Icon
       @click.stop="toggle"
-      class="mr-2"
+      class="mr-3"
       :name="playing ? 'pause' : 'play'"
     />
-    <Icon name="menu" />
+    <Icon name="list1" />
   </div>
 </template>
 <style lang="scss" scoped>
