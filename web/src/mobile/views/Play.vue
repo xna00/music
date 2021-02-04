@@ -2,6 +2,7 @@
 import Layout from "../components/Layout.vue";
 import Header from "../components/Header.vue";
 import Icon from "../../components/Icon.vue";
+import PlaylistIcon from "../components/PlaylistIcon.vue";
 import LinearSeekBar from "../../components/LinearSeekBar.vue";
 import {
   currentMusic,
@@ -19,7 +20,7 @@ import {
 import { likeMusic, unLikeMusic, isLikedMusic } from "../../lib/mix";
 import { computed, onMounted, ref, watch } from "vue";
 export default {
-  components: { Layout, Header, Icon, LinearSeekBar },
+  components: { Layout, Header, Icon, LinearSeekBar, PlaylistIcon },
 
   setup() {
     function toggle() {
@@ -209,7 +210,7 @@ export default {
           <Icon @click="previous" name="previous" />
           <Icon @click="toggle" :name="playing ? 'pause' : 'play'" />
           <Icon @click="next" name="next" />
-          <Icon name="list" />
+          <PlaylistIcon />
         </div>
       </template>
     </Layout>
