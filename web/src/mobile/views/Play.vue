@@ -16,7 +16,7 @@ import {
   mode,
   changeMode,
 } from "../../lib/audio";
-import { likeMusic } from "../../lib/mix";
+import { likeMusic, unLikeMusic, isLikedMusic } from "../../lib/mix";
 import { computed, onMounted, ref, watch } from "vue";
 export default {
   components: { Layout, Header, Icon, LinearSeekBar },
@@ -78,14 +78,13 @@ export default {
         const liList = ul.value.children;
         for (
           i = liList.length - 1;
-          i >= 0 &&
+          i > 0 &&
           ul.value.parentElement!.scrollTop <
             (liList[i] as HTMLLIElement).offsetTop -
-              (liList[i] as HTMLLIElement).offsetHeight / 2 -
+                (liList[i] as HTMLLIElement).offsetHeight / 2 -
               (ul.value.firstElementChild as HTMLLIElement).offsetTop;
           i--
         ) {}
-        i < 0 && (i = 0);
         selectedIndex.value = i;
       }
       cancelScrolling = setTimeout(() => {
@@ -124,6 +123,8 @@ export default {
       seekBySeeker,
       scrolling,
       likeMusic,
+      unLikeMusic,
+      isLikedMusic,
     };
   },
 };
@@ -183,7 +184,14 @@ export default {
       <template v-slot:footer>
         <div class="action-1">
           <div class="py-2 d-flex jc-around">
-            <Icon @click="likeMusic(currentMusic)" name="heart" />
+            <Icon
+              @click="
+                isLikedMusic(currentMusic)
+                  ? unLikeMusic(currentMusic)
+                  : likeMusic(currentMusic)
+              "
+              :name="isLikedMusic(currentMusic) ? 'heart-red' : 'heart'"
+            />
             <Icon name="3dot-menu" />
           </div>
         </div>

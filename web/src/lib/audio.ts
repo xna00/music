@@ -1,5 +1,6 @@
 import { ref, watch, watchEffect, computed } from "vue";
 import http from "./http";
+import { findMusic } from "./mix";
 export class Music {
   id = "";
   source = "";
@@ -48,7 +49,7 @@ watch([playlist, index], async ([newPlaylist, newIndex]: any) => {
     };
   });
   lyric = lyric.filter((l) => l.text);
-  currentMusic!.value!.parsedLyric = lyric;
+  currentMusic.value!.parsedLyric = lyric;
 
   audio.src = currentMusic.value?.audioUrl || "";
   audio.load();
@@ -61,12 +62,12 @@ watch([playlist, index], async ([newPlaylist, newIndex]: any) => {
 
 index.value = localStorage.index || 0;
 
-const currentMusic = ref<
-  MusicDetail & {
-    parsedLyric: { time: number; text: string }[];
-    currentLyricIndex: number;
-  }
->();
+class CurrentMusic extends MusicDetail {
+  parsedLyric: any[] = [];
+  currentLyricIndex = 0;
+  liked = false;
+}
+const currentMusic = ref<CurrentMusic>(new CurrentMusic());
 watch(
   playlist,
   (newPlaylist) => {
@@ -110,15 +111,15 @@ audio.addEventListener("pause", () => (playing.value = false));
 const play = () => {
   audio.play();
 };
-function findMusic(music: MusicDetail | Music, mix?: any[]) {
-  !mix && (mix = playlist.value);
-  return mix.findIndex((m) => {
-    return m.id === music.id && m.source === music.source;
-  });
-}
 function playFromSearchPage(music: Music) {
-  if (findMusic(music) >= 0) {
-    index.value = findMusic(music);
+  if (
+    findMusic(music, {
+      music: playlist.value,
+    }) >= 0
+  ) {
+    index.value = findMusic(music, {
+      music: playlist.value,
+    });
     return;
   }
   playlist.value.splice(index.value + 1, 0, music);
