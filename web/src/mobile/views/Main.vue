@@ -5,18 +5,78 @@ import Header from "../components/Header.vue";
 import Footer from "../components/Footer.vue";
 import Icon from "../../components/Icon.vue";
 import BottomSheet from "../components/BottomSheet.vue";
+import Dialog from "../../components/Dialog.vue";
 import { mixes, getMixes, addMix, deleteMix } from "../../lib/mix";
 export default {
-  components: { Layout, Header, Icon, Footer, BottomSheet },
+  components: { Layout, Header, Icon, Footer, Dialog, BottomSheet },
   setup() {
     getMixes();
     const musicListOpen = ref(false);
     const selectedMix = ref();
-    return { mixes, addMix, musicListOpen, selectedMix, deleteMix };
+    const newMixDialogOpen = ref(false);
+    const mixNameInput = ref<HTMLInputElement>();
+
+    return {
+      mixes,
+      addMix,
+      musicListOpen,
+      selectedMix,
+      deleteMix,
+      newMixDialogOpen,
+      mixNameInput,
+    };
   },
 };
 </script>
+<style lang="scss" scoped>
+.new-mix-dialog {
+  .title {
+    font-size: 16px;
+  }
+  input {
+    border: none;
+    border-bottom: 1px solid black;
+    border-radius: 0;
+    font-size: 14px;
+    line-height: 30px;
+    width: 250px;
+  }
+  .action {
+    text-align: end;
+    padding-top: 20px;
+    button {
+      border: none;
+      background: none;
+      font-size: 16px;
+      color: red;
+      &:first-child {
+        margin-right: 20px;
+      }
+    }
+  }
+}
+</style>
 <template>
+  <Dialog v-model:open="newMixDialogOpen">
+    <div class="new-mix-dialog px-3 py-3">
+      <div class="title">新建歌单</div>
+      <input type="text" ref="mixNameInput" />
+      <div class="action">
+        <button @click="newMixDialogOpen = false">取消</button>
+        <button
+          @click="
+            () => {
+              if (!mixNameInput.value) return;
+              addMix(mixNameInput.value);
+              newMixDialogOpen = false;
+            }
+          "
+        >
+          提交
+        </button>
+      </div>
+    </div>
+  </Dialog>
   <BottomSheet v-model:open="musicListOpen">
     <template v-slot:header>
       <div class="px-3 py-2">歌单：{{ selectedMix.name }}</div>
@@ -38,7 +98,7 @@ export default {
     <header class="px-3 pt-2 d-flex ai-center jc-between">
       <div class="text">我的歌单 ({{ mixes?.length }})</div>
       <div>
-        <Icon @click="addMix(Date.now())" name="add" class="mr-3" />
+        <Icon @click="newMixDialogOpen = true" name="add" class="mr-3" />
         <Icon name="3dot" />
       </div>
     </header>
