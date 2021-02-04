@@ -1,6 +1,6 @@
 import axios from "axios";
 const http = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: process.env.VUE_APP_API_URL || "/api",
 });
 
 http.interceptors.request.use((config) => {
@@ -10,4 +10,4 @@ http.interceptors.request.use((config) => {
   return config;
 });
 
-export default http
+export default http;
