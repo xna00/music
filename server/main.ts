@@ -8,6 +8,7 @@ const app = express();
 
 app.use(cors())
 app.use(express.json());
+app.use('/',express.static(__dirname+'/../web/dist_mobile'))
 
 app.set("secret", "riuep9qu8r4fjwoe");
 
