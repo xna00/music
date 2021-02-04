@@ -4,20 +4,17 @@ import Layout from "../components/Layout.vue";
 import Header from "../components/Header.vue";
 import Footer from "../components/Footer.vue";
 import Icon from "../../components/Icon.vue";
-import BottomSheet from "../components/BottomSheet.vue";
-import Dialog from "../../components/Dialog.vue";
 import EditMixDialog from "./Main/EditMixDialog.vue";
+import Aside from "./Main/Aside.vue";
 import { mixes, getMixes, addMix, deleteMix } from "../../lib/mix";
-import { login } from "../../lib/auth";
 export default {
   components: {
     Layout,
     Header,
     Icon,
     Footer,
-    Dialog,
-    BottomSheet,
     EditMixDialog,
+    Aside,
   },
   setup() {
     getMixes();
@@ -26,8 +23,6 @@ export default {
     const newMixDialogOpen = ref(false);
     const action = ref("create");
     const asideVisible = ref(false);
-    const username = ref();
-    const password = ref();
     return {
       mixes,
       addMix,
@@ -37,51 +32,13 @@ export default {
       newMixDialogOpen,
       action,
       asideVisible,
-      login,
-      username,
-      password,
     };
   },
 };
 </script>
-<style lang="scss" scoped>
-.slide-fade-enter-from,
-.slide-fade-leave-to {
-  opacity: 0;
-  > div {
-    transform: translateX(-100%);
-  }
-}
-aside {
-  background: none;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.5);
-  transition: all 0.3s linear;
-  > div {
-    height: 100%;
-    width: 65vw;
-    background: white;
-    transition: all 0.3s linear;
-  }
-}
-</style>
-<template>
-  <transition name="slide-fade">
-    <aside v-if="asideVisible" @click.self="asideVisible = false">
-      <div>
-        <div>
-          <label>username <input type="text" v-model="username"/></label>
-          <label>password <input type="password" v-model="password"/></label>
-          <input @click="login(username, password)" type="submit" value="" />
-        </div>
-      </div>
-    </aside>
-  </transition>
 
+<template>
+  <Aside v-model:asideVisible="asideVisible" />
   <EditMixDialog
     v-model:open="newMixDialogOpen"
     :action="action"
@@ -135,7 +92,6 @@ aside {
       >
         <img
           src="http://p4.music.126.net/66TVKnEXRyT3s1AOHnf1Mw==/84662395345207.jpg?param=34y34"
-          alt=""
           width="45"
           class="cover"
         />
