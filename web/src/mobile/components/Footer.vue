@@ -23,7 +23,7 @@ export default {
     class="footer d-flex ai-center px-2 pb-2 pt-1"
   >
     <img :src="currentMusic?.imageUrl" alt="" />
-    <div class="info">
+    <div class="info flex-1">
       <span class="fs-lg">{{ currentMusic?.name }}</span>
       <span v-if="currentMusic?.parsedLyric" class="fs-sm text-ellipsis">{{
         currentMusic?.parsedLyric[currentMusic?.currentLyricIndex]?.text

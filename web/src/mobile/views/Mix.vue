@@ -42,7 +42,7 @@ export default {
         v-for="(m, i) in mix.music"
         @click="palyFromMixPage(mix.music, i)"
       >
-        <span class="pl-3 pr-1">{{ i }}</span>
+        <span class="pl-3 pr-1">{{ i + 1 }}</span>
         <Music :music="m" />
       </li>
     </ul>
