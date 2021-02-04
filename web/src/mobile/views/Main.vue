@@ -25,7 +25,7 @@ export default {
     const selectedMix = ref();
     const newMixDialogOpen = ref(false);
     const action = ref("create");
-    const asideVisible = ref(true);
+    const asideVisible = ref(false);
     const username = ref();
     const password = ref();
     return {
