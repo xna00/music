@@ -45,49 +45,43 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.slide-fade-enter-active {
-  transition: all 0.3s linear;
-}
-
-.slide-fade-leave-active {
-  transition: all 0.8s linear;
-}
-
 .slide-fade-enter-from,
 .slide-fade-leave-to {
-  transform: translateX(-240px);
   opacity: 0;
+  > div {
+    transform: translateX(-100%);
+  }
 }
 aside {
   background: none;
-  transition: background-color 0.3s;
-  &.visible {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.5);
-    > div {
-      height: 100%;
-      width: 70%;
-      background: white;
-    }
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+  transition: all 0.3s linear;
+  > div {
+    height: 100%;
+    width: 65vw;
+    background: white;
+    transition: all 0.3s linear;
   }
 }
 </style>
 <template>
-  <aside @click.self="asideVisible = false" :class="{ visible: asideVisible }">
-    <transition name="slide-fade">
-      <div v-if="asideVisible">
+  <transition name="slide-fade">
+    <aside v-if="asideVisible" @click.self="asideVisible = false">
+      <div>
         <div>
           <label>username <input type="text" v-model="username"/></label>
           <label>password <input type="password" v-model="password"/></label>
           <input @click="login(username, password)" type="submit" value="" />
         </div>
       </div>
-    </transition>
-  </aside>
+    </aside>
+  </transition>
+
   <EditMixDialog
     v-model:open="newMixDialogOpen"
     :action="action"
