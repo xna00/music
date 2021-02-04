@@ -5,19 +5,47 @@ import {
   play,
   pause,
   playing,
+  playlist,
+  index,
 } from "../../lib/audio";
 import Icon from "../../components/Icon.vue";
+import BottomSheet from "../components/BottomSheet.vue";
+import { ref } from "vue";
 export default {
-  components: { Icon },
+  components: { Icon, BottomSheet },
   setup() {
     function toggle() {
       playing.value ? pause() : play();
     }
-    return { currentMusic, currentTime, toggle, playing };
+    const listOpen = ref(false);
+    return {
+      currentMusic,
+      currentTime,
+      toggle,
+      playing,
+      listOpen,
+      playlist,
+      index,
+    };
   },
 };
 </script>
 <template>
+  <BottomSheet v-model:open="listOpen">
+    <template v-slot:header>
+      <div class="px-3 fs-xl">列表 ({{ playlist.length }})</div>
+    </template>
+    <ul>
+      <li
+        v-for="(m, i) in playlist"
+        @click="index = i"
+        class="px-3 py-2 fs-lg"
+        :class="{ hit: index == i }"
+      >
+        {{ m.name }}
+      </li>
+    </ul>
+  </BottomSheet>
   <div
     @click="$router.push('/play')"
     class="footer d-flex ai-center px-2 pb-2 pt-1"
@@ -34,10 +62,13 @@ export default {
       class="mr-3"
       :name="playing ? 'pause' : 'play'"
     />
-    <Icon name="list1" />
+    <Icon @click.stop="listOpen = true" name="list1" />
   </div>
 </template>
 <style lang="scss" scoped>
+.hit {
+  color: red;
+}
 .footer {
   border-top: 1px solid;
   font-size: 25px;

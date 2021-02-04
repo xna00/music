@@ -81,7 +81,7 @@ export default {
           i > 0 &&
           ul.value.parentElement!.scrollTop <
             (liList[i] as HTMLLIElement).offsetTop -
-                (liList[i] as HTMLLIElement).offsetHeight / 2 -
+              (liList[i] as HTMLLIElement).offsetHeight / 2 -
               (ul.value.firstElementChild as HTMLLIElement).offsetTop;
           i--
         ) {}
