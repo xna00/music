@@ -6,16 +6,28 @@ import Footer from "../components/Footer.vue";
 import Icon from "../../components/Icon.vue";
 import BottomSheet from "../components/BottomSheet.vue";
 import Dialog from "../../components/Dialog.vue";
+import EditMixDialog from "./Main/EditMixDialog.vue";
 import { mixes, getMixes, addMix, deleteMix } from "../../lib/mix";
+import { login } from "../../lib/auth";
 export default {
-  components: { Layout, Header, Icon, Footer, Dialog, BottomSheet },
+  components: {
+    Layout,
+    Header,
+    Icon,
+    Footer,
+    Dialog,
+    BottomSheet,
+    EditMixDialog,
+  },
   setup() {
     getMixes();
     const musicListOpen = ref(false);
     const selectedMix = ref();
     const newMixDialogOpen = ref(false);
-    const mixNameInput = ref<HTMLInputElement>();
-
+    const action = ref("create");
+    const asideVisible = ref(true);
+    const username = ref();
+    const password = ref();
     return {
       mixes,
       addMix,
@@ -23,73 +35,84 @@ export default {
       selectedMix,
       deleteMix,
       newMixDialogOpen,
-      mixNameInput,
+      action,
+      asideVisible,
+      login,
+      username,
+      password,
     };
   },
 };
 </script>
 <style lang="scss" scoped>
-.new-mix-dialog {
-  .title {
-    font-size: 16px;
-  }
-  input {
-    border: none;
-    border-bottom: 1px solid black;
-    border-radius: 0;
-    font-size: 14px;
-    line-height: 30px;
-    width: 250px;
-  }
-  .action {
-    text-align: end;
-    padding-top: 20px;
-    button {
-      border: none;
-      background: none;
-      font-size: 16px;
-      color: red;
-      &:first-child {
-        margin-right: 20px;
-      }
+.slide-fade-enter-active {
+  transition: all 0.3s linear;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.8s linear;
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(-240px);
+  opacity: 0;
+}
+aside {
+  background: none;
+  transition: background-color 0.3s;
+  &.visible {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    > div {
+      height: 100%;
+      width: 70%;
+      background: white;
     }
   }
 }
 </style>
 <template>
-  <Dialog v-model:open="newMixDialogOpen">
-    <div class="new-mix-dialog px-3 py-3">
-      <div class="title">新建歌单</div>
-      <input type="text" ref="mixNameInput" />
-      <div class="action">
-        <button @click="newMixDialogOpen = false">取消</button>
-        <button
-          @click="
-            () => {
-              if (!mixNameInput.value) return;
-              addMix(mixNameInput.value);
-              newMixDialogOpen = false;
-            }
-          "
-        >
-          提交
-        </button>
+  <aside @click.self="asideVisible = false" :class="{ visible: asideVisible }">
+    <transition name="slide-fade">
+      <div v-if="asideVisible">
+        <div>
+          <label>username <input type="text" v-model="username"/></label>
+          <label>password <input type="password" v-model="password"/></label>
+          <input @click="login(username, password)" type="submit" value="" />
+        </div>
       </div>
-    </div>
-  </Dialog>
+    </transition>
+  </aside>
+  <EditMixDialog
+    v-model:open="newMixDialogOpen"
+    :action="action"
+    :mix="selectedMix"
+  />
   <BottomSheet v-model:open="musicListOpen">
     <template v-slot:header>
       <div class="px-3 py-2">歌单：{{ selectedMix.name }}</div>
     </template>
     <div @click="musicListOpen = false" class="mix-action px-3">
-      <div>编辑</div>
+      <div
+        @click="
+          newMixDialogOpen = true;
+          action = 'update';
+        "
+      >
+        编辑
+      </div>
       <div @click="deleteMix(selectedMix._id)">删除</div>
     </div>
   </BottomSheet>
   <Layout>
     <template v-slot:header>
       <Header class="bg-primary py-3">
-        <Icon name="menu" />
+        <Icon @click="asideVisible = true" name="menu" />
         <router-link to="/search">
           <Icon name="search" />
         </router-link>
@@ -98,7 +121,14 @@ export default {
     <header class="px-3 pt-2 d-flex ai-center jc-between">
       <div class="text">我的歌单 ({{ mixes?.length }})</div>
       <div>
-        <Icon @click="newMixDialogOpen = true" name="add" class="mr-3" />
+        <Icon
+          @click="
+            newMixDialogOpen = true;
+            action = 'create';
+          "
+          name="add"
+          class="mr-3"
+        />
         <Icon name="3dot" />
       </div>
     </header>

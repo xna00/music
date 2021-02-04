@@ -17,6 +17,7 @@ const getMix = async (id: string) => {
 
 const putMix = async (newMix) => {
   console.log(newMix);
+  getMixes();
   return (await http.put(`/mixes/${newMix._id}`, newMix)).data;
 };
 
