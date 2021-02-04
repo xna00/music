@@ -14,9 +14,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .main {
-  div{
+  div {
     font-size: 16px;
-    padding:8px 0;
+    padding: 8px 0;
   }
 }
 </style>
@@ -28,15 +28,13 @@ export default {
           {{ music.name }}
         </div>
       </template>
-      <div class="main px-3">
-        <div>下一首播放</div>
-        <div>收藏到歌单</div>
-        <slot name="list-item"/>
+      <div @click="open = false" class="main px-3">
+        <slot name="list-item" />
       </div>
     </BottomSheet>
     <div>
       <span class="name text-ellipsis">{{ music.name }}</span>
-      <span class="info">{{ music.artists.join("/") }}</span>
+      <span class="info">{{ music.artists?.join("/") }}</span>
     </div>
     <!-- <div> -->
     <Icon @click.stop="open = true" name="3dot" />

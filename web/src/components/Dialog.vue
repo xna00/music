@@ -1,7 +1,7 @@
 <script lang="ts">
 export default {
   props: {
-    open: { type: Boolean, default: true },
+    open: { type: Boolean, default: false },
   },
 };
 </script>
