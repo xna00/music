@@ -66,6 +66,11 @@ const addMix = async (name: string) => {
   getMixes();
 };
 
+const deleteMix = async (mixId) => {
+  await http.delete("/mixes/" + mixId);
+  getMixes();
+};
+
 export {
   mixes,
   getMixes,
@@ -76,6 +81,7 @@ export {
   removeMusic,
   unLikeMusic,
   addMix,
+  deleteMix,
   findMusic,
   isLikedMusic,
 };

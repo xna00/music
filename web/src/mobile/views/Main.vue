@@ -4,17 +4,28 @@ import Layout from "../components/Layout.vue";
 import Header from "../components/Header.vue";
 import Footer from "../components/Footer.vue";
 import Icon from "../../components/Icon.vue";
-import http from "../../lib/http";
-import { mixes, getMixes, addMix } from "../../lib/mix";
+import BottomSheet from "../components/BottomSheet.vue";
+import { mixes, getMixes, addMix, deleteMix } from "../../lib/mix";
 export default {
-  components: { Layout, Header, Icon, Footer },
+  components: { Layout, Header, Icon, Footer, BottomSheet },
   setup() {
     getMixes();
-    return { mixes, addMix };
+    const musicListOpen = ref(false);
+    const selectedMix = ref();
+    return { mixes, addMix, musicListOpen, selectedMix, deleteMix };
   },
 };
 </script>
 <template>
+  <BottomSheet v-model:open="musicListOpen">
+    <template v-slot:header>
+      <div class="px-3 py-2">歌单：{{ selectedMix.name }}</div>
+    </template>
+    <div @click="musicListOpen = false" class="mix-action px-3">
+      <div>编辑</div>
+      <div @click="deleteMix(selectedMix._id)">删除</div>
+    </div>
+  </BottomSheet>
   <Layout>
     <template v-slot:header>
       <Header class="bg-primary py-3">
@@ -48,13 +59,25 @@ export default {
           <span class="fs-lg">{{ mix.name }}</span>
           <span class="fs-sm">{{ mix.music.length }}首</span>
         </div>
-        <Icon name="3dot" />
+        <Icon
+          @click.stop="
+            selectedMix = mix;
+            musicListOpen = true;
+          "
+          name="3dot"
+        />
       </li>
     </ul>
     <template v-slot:footer><Footer /></template>
   </Layout>
 </template>
 <style lang="scss" scoped>
+.mix-action {
+  > div {
+    font-size: 16px;
+    padding: 8px 0;
+  }
+}
 header {
   font-size: 18px;
   font-weight: bolder;
