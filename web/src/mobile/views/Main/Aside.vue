@@ -1,7 +1,13 @@
 <script lang="ts">
+import { ref } from "vue";
 export default {
   props: {
     asideVisible: { type: Boolean, default: false },
+  },
+  setup() {
+    const logined = ref();
+    logined.value = localStorage.token;
+    return { logined };
   },
 };
 </script>
@@ -11,7 +17,9 @@ export default {
       v-if="asideVisible"
       @click.self="$emit('update:asideVisible', false)"
     >
-      <div></div>
+      <div>
+        <div v-if="logined">已登录</div>
+      </div>
     </aside>
   </transition>
 </template>
