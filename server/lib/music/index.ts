@@ -37,13 +37,14 @@ export default {
     let musicDetail = await MusicModel.findOne({
       id: music.id,
     });
-    console.log(musicDetail);
-    let newMusicDetail = await sourceMap[music.source].getDetail(music);
     if (!musicDetail) {
+      let newMusicDetail = await sourceMap[music.source].getDetail(music);
       musicDetail = await MusicModel.create(newMusicDetail);
     }
-    musicDetail.audioUrl = newMusicDetail.audioUrl;
-    musicDetail.save();
     return musicDetail;
+  },
+  async update(music: Music) {
+    let newMusicDetail = await sourceMap[music.source].getDetail(music);
+    return await MusicModel.findByIdAndUpdate(newMusicDetail);
   },
 };

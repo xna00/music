@@ -5,9 +5,9 @@ module.exports = (app) => {
     mergeParams: true,
   });
 
-  router.get('/sources',(req,res)=>{
-    res.send(sources.getSources())
-  })
+  router.get("/sources", (req, res) => {
+    res.send(sources.getSources());
+  });
 
   router.get("/suggestions", (req, res) => {
     res.send("suggestions");
@@ -23,6 +23,11 @@ module.exports = (app) => {
     const music = req.body;
     const result = await sources.getDetail(music);
     res.send(result);
+  });
+
+  router.patch("/update", async (req, res) => {
+    const music = await sources.update(req.body);
+    res.send(music);
   });
 
   app.use("/api/music", router);
