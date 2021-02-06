@@ -8,9 +8,20 @@ export default (app) => {
   const router = express.Router();
 
   router.get("/", async (req: any, res) => {
-    const mixes = await Mix.find({
-      owner: req.user._id,
-    });
+    const mixes = await Mix.aggregate([
+      { $match: { owner: req.user._id } },
+      { $addFields: { firstMusicId: { $arrayElemAt: ["$music", 0] } } },
+      {
+        $lookup: {
+          from: "musics",
+          foreignField: "_id",
+          localField: "firstMusicId",
+          as: "firstMusic",
+        },
+      },
+      { $addFields: { cover: "$firstMusic.imageUrl" } },
+      { $unset: ["firstMusicId", "firstMusic"] },
+    ]);
     res.send(mixes);
   });
 

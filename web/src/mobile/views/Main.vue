@@ -90,11 +90,7 @@ export default {
         @click="$router.push('/mix/' + mix._id)"
         class="d-flex ai-center pb-2"
       >
-        <img
-          src="http://p4.music.126.net/66TVKnEXRyT3s1AOHnf1Mw==/84662395345207.jpg?param=34y34"
-          width="45"
-          class="cover"
-        />
+        <img :src="mix.cover" width="45" class="cover" />
         <div class="pl-2 d-flex flex-column jc-center title">
           <span class="fs-lg">{{ mix.name }}</span>
           <span class="fs-sm">{{ mix.music.length }}首</span>
