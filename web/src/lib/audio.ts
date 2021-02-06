@@ -22,8 +22,14 @@ const index = ref<number>(0);
 watch([playlist, index], async ([newPlaylist, newIndex]: any) => {
   console.log(newPlaylist === playlist.value, newIndex);
   //index changed
-  newIndex < 0 && (index.value = playlist.value.length - 1);
-  newIndex >= playlist.value.length && (index.value = 0);
+  if (newIndex < 0) {
+    index.value = playlist.value.length - 1;
+    return;
+  }
+  if (newIndex >= playlist.value.length) {
+    index.value = 0;
+    return;
+  }
   localStorage.index = index.value;
   const musicDetail = (
     await http.post("/music/detail", playlist.value[index.value])
@@ -96,17 +102,33 @@ audio.addEventListener("timeupdate", () => {
     let i;
     for (
       i = currentMusic.value.parsedLyric.length - 1;
-      i >= 0 && currentTime.value < currentMusic.value.parsedLyric[i].time;
+      i > 0 && currentTime.value < currentMusic.value.parsedLyric[i].time;
       i--
     ) {}
-    i < 0 && (i = 0);
     currentMusic.value.currentLyricIndex = i;
   }
 });
 const playing = ref<boolean>(false);
 
+let errorTime = 0;
 audio.addEventListener("playing", () => (playing.value = true));
 audio.addEventListener("pause", () => (playing.value = false));
+audio.addEventListener("error", async (e) => {
+  if (errorTime === 0) {
+    errorTime = 1;
+    const newMusic = (await http.patch("music/update", currentMusic.value))
+      .data;
+    console.log(newMusic);
+    currentMusic.value.audioUrl = newMusic.audioUrl;
+    audio.load();
+    audio.play();
+  } else {
+    console.log("播放失败");
+    errorTime = 0;
+    next();
+  }
+});
+audio.addEventListener("loadeddata", () => (errorTime = 0));
 
 const play = () => {
   audio.play();
