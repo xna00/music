@@ -28,7 +28,7 @@ export default {
     @click="$router.push('/play')"
     class="footer d-flex ai-center px-2 pb-2 pt-1"
   >
-    <img :src="currentMusic?.imageUrl" alt="" />
+    <component :is="currentMusic.image" />
     <div class="info flex-1">
       <span class="fs-lg">{{ currentMusic?.name }}</span>
       <span v-if="currentMusic?.parsedLyric" class="fs-sm text-ellipsis">{{
@@ -50,10 +50,6 @@ export default {
 .footer {
   border-top: 1px solid;
   font-size: 25px;
-  > img {
-    width: 35px;
-    border-radius: 50%;
-  }
   > .info {
     margin-left: 8px;
     margin-right: auto;

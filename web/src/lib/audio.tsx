@@ -11,6 +11,7 @@ export class Music {
 export class MusicDetail extends Music {
   audioUrl = "";
   imageUrl = "";
+  image;
   lyric = "";
 }
 let firstTimeIndexChange = true;
@@ -36,6 +37,12 @@ watch([playlist, index], async ([newPlaylist, newIndex]: any) => {
   ).data;
   console.log(musicDetail);
   currentMusic.value = musicDetail;
+  currentMusic.value.image = (
+    <img
+      src={musicDetail.imageUrl}
+      style={{ width: "35px", borderRadius: "50%" }}
+    />
+  );
   let lyric: { time: number; text: string }[] = musicDetail.lyric
     .trim()
     .split("\n");
