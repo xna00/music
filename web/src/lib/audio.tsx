@@ -126,12 +126,11 @@ audio.addEventListener("error", async (e) => {
     errorTime = 1;
     const newMusic = (await http.patch("music/update", currentMusic.value))
       .data;
-    console.log(newMusic);
-    currentMusic.value.audioUrl = newMusic.audioUrl;
+    audio.src = currentMusic.value.audioUrl = newMusic.audioUrl;
     audio.load();
     audio.play();
   } else {
-    console.log("播放失败");
+    showToast("播放失败");
     errorTime = 0;
     next();
   }
@@ -166,13 +165,12 @@ const pause = () => {
 let modes = ["单曲循环", "顺序播放", "随机播放"];
 const mode = ref<number>(0);
 mode.value = parseInt(localStorage.mode) || 0;
-watch(mode, () => {
-  localStorage.mode = mode.value;
-});
 
 const changeMode = () => {
   mode.value++;
   mode.value >= modes.length && (mode.value = 0);
+  localStorage.mode = mode.value;
+  showToast(modes[mode.value]);
 };
 
 const next = () => {

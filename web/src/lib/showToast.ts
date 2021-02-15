@@ -13,5 +13,9 @@ const showToast = (content, time = 1000) => {
     )
   );
   app.mount(div);
+  setTimeout(() => {
+    app.unmount(div);
+    div.remove();
+  }, time * 2);
 };
 export default showToast;

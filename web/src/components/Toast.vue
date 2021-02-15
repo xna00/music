@@ -34,6 +34,7 @@ export default {
   bottom: 10vh;
   padding: 0.7em 1em;
   background: rgba(0, 0, 0, 0.5);
+  color: white;
   transition: all 0.2s;
 }
 </style>

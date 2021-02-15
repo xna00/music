@@ -43,8 +43,8 @@ export default {
     }
     return musicDetail;
   },
-  async update(music: Music) {
+  async update(music: Music & { _id: string }) {
     let newMusicDetail = await sourceMap[music.source].getDetail(music);
-    return await MusicModel.findByIdAndUpdate(newMusicDetail);
+    return await MusicModel.findByIdAndUpdate(music._id, newMusicDetail);
   },
 };
