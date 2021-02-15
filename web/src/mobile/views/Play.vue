@@ -238,7 +238,7 @@ export default {
     transform: translate(-50%, -50%);
     transition: opacity 0.3s;
     > img {
-      width: 53.333vw;
+      width: 60vw;
       border-radius: 50%;
       animation: rotate 30s linear infinite;
     }
