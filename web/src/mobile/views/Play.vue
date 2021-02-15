@@ -18,23 +18,16 @@ import {
   changeMode,
 } from "../../lib/audio";
 import { likeMusic, unLikeMusic, isLikedMusic } from "../../lib/mix";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, ref } from "vue";
+import Lyric from "./Play/Lyric.vue";
+import timeFormat from "../../lib/timeFormat";
 export default {
-  components: { Layout, Header, Icon, LinearSeekBar, PlaylistIcon },
+  components: { Layout, Header, Icon, LinearSeekBar, PlaylistIcon, Lyric },
 
   setup() {
     function toggle() {
       playing.value ? pause() : play();
     }
-    const timeFormat = (seconds) => {
-      const date = new Date(seconds * 1000);
-      let m = date.getMinutes().toString();
-      let s = date.getSeconds().toString();
-      m.length < 2 && (m = "0" + m);
-      s.length < 2 && (s = "0" + s);
-      s.length > 2 && (s = s.substr(0, 2));
-      return m + ":" + s;
-    };
 
     const formatedCurrentTime = computed(() => timeFormat(currentTime.value));
     const formatedDuration = computed(() => timeFormat(duration.value));
@@ -45,63 +38,6 @@ export default {
     const imageVisible = ref(false);
     const showToggle = () => (imageVisible.value = !imageVisible.value);
 
-    const ul = ref<HTMLUListElement>();
-    const scroll = () => {
-      if (
-        !ul.value ||
-        !currentMusic.value ||
-        !ul.value.children[currentMusic.value.currentLyricIndex]
-      )
-        return;
-      const lyricWrapper = ul.value.parentElement;
-      lyricWrapper!.scrollTop =
-        (ul.value.children[
-          currentMusic.value.currentLyricIndex
-        ] as HTMLLIElement).offsetTop -
-        (ul.value.firstElementChild as HTMLLIElement).offsetTop;
-    };
-    watch(
-      currentMusic,
-      () => {
-        if (scrolling.value) return;
-        scroll();
-      },
-      { deep: true }
-    );
-    let scrolling = ref(false);
-    let cancelScrolling;
-    const selectedIndex = ref(-1);
-    const onTouchmove = (e) => {
-      clearTimeout(cancelScrolling);
-      scrolling.value = true;
-      if (ul.value) {
-        let i = 0;
-        const liList = ul.value.children;
-        for (
-          i = liList.length - 1;
-          i > 0 &&
-          ul.value.parentElement!.scrollTop <
-            (liList[i] as HTMLLIElement).offsetTop -
-              (liList[i] as HTMLLIElement).offsetHeight / 2 -
-              (ul.value.firstElementChild as HTMLLIElement).offsetTop;
-          i--
-        ) {}
-        selectedIndex.value = i;
-      }
-      cancelScrolling = setTimeout(() => {
-        scrolling.value = false;
-        scroll();
-        selectedIndex.value = -1;
-      }, 3000);
-    };
-    const seekBySeeker = () => {
-      if (currentMusic.value) {
-        seek(
-          currentMusic.value.parsedLyric[selectedIndex.value].time /
-            duration.value
-        );
-      }
-    };
     return {
       modeIcon,
       currentMusic,
@@ -118,11 +54,6 @@ export default {
       timeFormat,
       imageVisible,
       showToggle,
-      onTouchmove,
-      ul,
-      selectedIndex,
-      seekBySeeker,
-      scrolling,
       likeMusic,
       unLikeMusic,
       isLikedMusic,
@@ -154,33 +85,7 @@ export default {
             :style="{ animationPlayState: playing ? 'running' : 'paused' }"
           />
         </div>
-        <div
-          ref="lyricWrapper"
-          class="lyric-wrapper"
-          :class="{ invisible: imageVisible }"
-          @touchmove="onTouchmove"
-        >
-          <div
-            v-if="scrolling"
-            class="seeker"
-            :data-time="
-              timeFormat(currentMusic.parsedLyric[selectedIndex].time)
-            "
-            @click.stop="seekBySeeker"
-          />
-          <ul ref="ul">
-            <li
-              v-for="(lrc, i) in currentMusic.parsedLyric"
-              :key="lrc.time"
-              :class="{
-                active: i === currentMusic.currentLyricIndex,
-                selected: i === selectedIndex,
-              }"
-            >
-              {{ lrc.text }}
-            </li>
-          </ul>
-        </div>
+        <Lyric :imageVisible="imageVisible" />
       </div>
       <template v-slot:footer>
         <div class="action-1">
@@ -241,57 +146,6 @@ export default {
       width: 60vw;
       border-radius: 50%;
       animation: rotate 30s linear infinite;
-    }
-  }
-
-  .lyric-wrapper {
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    scroll-behavior: smooth;
-    transition: opacity 0.3s;
-    box-shadow: 0px 200px 35px 59px rgba(255, 255, 255, 0.01) inset;
-    .seeker {
-      position: absolute;
-      background: red;
-      width: 80%;
-      height: 1px;
-      left: 30px;
-      top: 50%;
-      transform: translateY(-50%);
-      &::before {
-        content: " ";
-        // display: block;
-        position: absolute;
-        width: 16px;
-        height: 16px;
-        left: -25px;
-        top: 50%;
-        transform: translateY(-50%);
-        border: 8px solid transparent;
-        border-left-color: black;
-      }
-      &::after {
-        content: attr(data-time);
-        position: absolute;
-        left: 102%;
-        top: 50%;
-        transform: translateY(-50%);
-      }
-    }
-    > ul {
-      padding: 61% 0;
-      text-align: center;
-      font-size: 16px;
-      font-weight: bolder;
-      line-height: 2em;
-      color: white;
-      .selected {
-        color: green;
-      }
-      .active {
-        color: red;
-      }
     }
   }
 }
