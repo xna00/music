@@ -3,3 +3,7 @@
 </template>
 
 <style lang="scss"></style>
+<script lang="ts">
+document.oncontextmenu = () => false;
+document.onselectstart = () => false;
+</script>
