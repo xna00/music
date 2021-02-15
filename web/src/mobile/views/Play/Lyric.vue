@@ -28,7 +28,7 @@ export default {
       () => {
         const parentElement = ul.value!.parentElement;
         const firstElementChild = <HTMLLIElement>ul.value!.firstElementChild;
-        if (firstElementChild) {
+        if (parentElement && firstElementChild) {
           ul.value!.style.padding = `${parentElement.offsetHeight / 2 -
             firstElementChild.offsetHeight / 2}px 0`;
         }
