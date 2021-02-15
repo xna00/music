@@ -32,9 +32,9 @@ export default {
         <slot name="list-item" />
       </div>
     </BottomSheet>
-    <div>
+    <div class="flex-1">
       <span class="name text-ellipsis">{{ music.name }}</span>
-      <span class="info">{{ music.artists?.join("/") }}</span>
+      <span class="info text-ellipsis">{{ music.artists?.join("/") }}</span>
     </div>
     <!-- <div> -->
     <Icon @click.stop="open = true" name="3dot" />
