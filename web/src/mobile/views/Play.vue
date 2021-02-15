@@ -35,7 +35,7 @@ export default {
 
     const modeIcon = ["single-2", "xunhuan", "jiaochahulianxiang"];
 
-    const imageVisible = ref(false);
+    const imageVisible = ref(true);
     const showToggle = () => (imageVisible.value = !imageVisible.value);
 
     return {

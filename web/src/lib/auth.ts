@@ -23,4 +23,8 @@ const register = async (username, password) => {
   ).data;
 };
 
-export { login, register };
+const getUser = async () => {
+  return (await http.get("/auth/user")).data;
+};
+
+export { login, register, getUser };

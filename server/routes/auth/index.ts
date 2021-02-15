@@ -3,6 +3,7 @@ import User from "../../models/User";
 import Mix from "../../models/Mix";
 import jwt from "jsonwebtoken";
 import assert = require("http-assert");
+import auth from "../../middleware/auth";
 
 module.exports = (app) => {
   const router = express.Router();
@@ -22,6 +23,13 @@ module.exports = (app) => {
     assert(isValid, 422, "密码错误");
     const token = jwt.sign({ id: user!._id }, app.get("secret"));
     res.send({ token });
+  });
+
+  interface Request {
+    user: object;
+  }
+  router.get("/user", auth(), (req: any, res) => {
+    res.send(req.user);
   });
 
   app.use("/api/auth", router);

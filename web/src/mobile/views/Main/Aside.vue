@@ -1,5 +1,7 @@
 <script lang="ts">
 import { ref } from "vue";
+import { getUser } from "../../../lib/auth";
+
 export default {
   props: {
     asideVisible: { type: Boolean, default: false },
@@ -7,7 +9,16 @@ export default {
   setup() {
     const logined = ref();
     logined.value = localStorage.token;
-    return { logined };
+    const user = ref();
+    const fetchUser = async () => {
+      user.value = await getUser();
+    };
+    fetchUser();
+    const logout = () => {
+      localStorage.token = "";
+      location.reload();
+    };
+    return { logined, user, logout };
   },
 };
 </script>
@@ -18,7 +29,15 @@ export default {
       @click.self="$emit('update:asideVisible', false)"
     >
       <div>
-        <div v-if="logined">已登录</div>
+        <button v-if="!logined" @click="$router.push('/login')">
+          点击登录
+        </button>
+        <div v-else class="h-100 d-flex flex-column">
+          <div class="fs-xl">
+            {{ user.username }}
+          </div>
+          <button @click="logout">注销</button>
+        </div>
       </div>
     </aside>
   </transition>
@@ -39,12 +58,19 @@ aside {
   left: 0;
   right: 0;
   background: rgba(0, 0, 0, 0.5);
-  transition: all 0.3s linear;
+  transition: all 0.2s linear;
   > div {
     height: 100%;
     width: 65vw;
     background: white;
-    transition: all 0.3s linear;
+    transition: all 0.2s linear;
+    button {
+      width: 100%;
+      border: 1px solid red;
+      background: transparent;
+      color: red;
+      line-height: 2em;
+    }
   }
 }
 </style>
