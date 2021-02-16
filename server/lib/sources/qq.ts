@@ -53,8 +53,15 @@ const getDetail = async (music: Music) => {
   };
   return musicDetail;
 };
+const importMix = async () => {
+  return {
+    name: "",
+    music: [],
+  };
+};
 const qq: Source = {
   search,
   getDetail,
+  importMix,
 };
 export default qq;

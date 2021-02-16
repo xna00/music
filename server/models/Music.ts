@@ -1,4 +1,4 @@
-import { MusicDetail } from "./../lib/music/index";
+import { MusicDetail } from "../lib/sources/index";
 import mongoose, { Document } from "mongoose";
 
 const schema = new mongoose.Schema<MusicDetail & Document>({

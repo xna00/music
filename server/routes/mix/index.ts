@@ -3,6 +3,7 @@ import express from "express";
 import authMiddleware from "../../middleware/auth";
 import errorHandler from "../../middleware/errorHandler";
 import Mix from "../../models/Mix";
+import sources from "../../lib/sources";
 
 export default (app) => {
   const router = express.Router();
@@ -46,6 +47,24 @@ export default (app) => {
     const mix = await Mix.findById(req.params.id);
     mix?.remove();
     res.send({ succeed: true });
+  });
+
+  router.post("/import", async (req: any, res) => {
+    console.log("import");
+    console.log(req.body.url);
+    const rawMix = await sources.importMix(req.body.url);
+    console.log(rawMix);
+    if (!rawMix) {
+      res.send({ success: false });
+      return;
+    }
+    console.log(rawMix);
+    const mix = await Mix.create({
+      name: rawMix.name,
+      owner: req.user._id,
+      music: rawMix.music,
+    });
+    res.send(mix);
   });
 
   router.use(errorHandler());

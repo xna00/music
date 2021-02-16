@@ -1,5 +1,5 @@
 import express = require("express");
-import sources from "../../lib/music";
+import sources from "../../lib/sources";
 module.exports = (app) => {
   const router = express.Router({
     mergeParams: true,

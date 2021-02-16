@@ -51,6 +51,7 @@ const lyric = {
 
 import http from "../http";
 import { Source, Music, MusicDetail } from "./index";
+const sourceName = "netease";
 const request = (api) => {
   const encryptedParams = encryptParams(api.params);
   const formData = {
@@ -67,10 +68,10 @@ const searchMusic = async (keyword: string) => {
   const result = await request(search);
   let rawData: any;
   // rawData = JSON.parse(result);
-  rawData = result
+  rawData = result;
   const data: Music[] = rawData.result.songs.map((song) => ({
     id: song.id.toString(),
-    source: "netease",
+    source: sourceName,
     name: song.name,
     album: song.al.name,
     artists: song.ar.map((a) => a.name),
@@ -98,8 +99,41 @@ const getDetail = async (music: Music) => {
   };
   return musicDetail;
 };
+const importMix = async (id: string) => {
+  const res: any = await http.get(
+    "http://musicapi.leanapp.cn/playlist/detail",
+    {
+      id,
+    }
+  );
+  let music: any[] = await Promise.all(
+    res.playlist.trackIds.map((t) =>
+      http.get("http://musicapi.leanapp.cn/song/detail", {
+        ids: t.id,
+      })
+    )
+  );
+  music = music.map(
+    (m): Music => {
+      const song = m.songs[0];
+      return {
+        name: song.name,
+        source: sourceName,
+        id: song.id,
+        artists: song.ar.map((a) => a.name),
+        album: song.al.name,
+      };
+    }
+  );
+  return {
+    name: res.playlist.name,
+    music,
+  };
+};
+
 const netease: Source = {
   search: searchMusic,
   getDetail,
+  importMix,
 };
 export default netease;
