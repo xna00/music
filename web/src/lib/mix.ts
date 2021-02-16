@@ -1,6 +1,7 @@
 import { ref, watch } from "vue";
 import http from "./http";
 import { currentMusic, index } from "./audio";
+import showToast from "./showToast";
 
 const mixes = ref();
 const getMixes = async () => {
@@ -72,6 +73,16 @@ const deleteMix = async (mixId) => {
   getMixes();
 };
 
+const importMix = async (url: string) => {
+  const result = (await http.post("/mixes/import", { url })).data;
+  if (result.success && result.success === false) {
+    showToast("导入失败");
+  } else {
+    showToast("导入成功");
+  }
+  getMixes();
+};
+
 export {
   mixes,
   getMixes,
@@ -85,4 +96,5 @@ export {
   deleteMix,
   findMusic,
   isLikedMusic,
+  importMix,
 };
