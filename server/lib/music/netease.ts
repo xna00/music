@@ -66,7 +66,8 @@ const searchMusic = async (keyword: string) => {
   search.params.s = keyword;
   const result = await request(search);
   let rawData: any;
-  rawData = JSON.parse(result);
+  // rawData = JSON.parse(result);
+  rawData = result
   const data: Music[] = rawData.result.songs.map((song) => ({
     id: song.id.toString(),
     source: "netease",
@@ -84,8 +85,8 @@ const getDetail = async (music: Music) => {
       `http://music.163.com/api/song/lyric?os=pc&id=${id}&lv=-1&kv=-1&tv=-1`
     ),
   ]);
-  detail = JSON.parse(detail);
-  lyric = JSON.parse(lyric);
+  // detail = JSON.parse(detail);
+  // lyric = JSON.parse(lyric);
   lyric = lyric.lrc.lyric;
   const song = detail.songs[0];
 

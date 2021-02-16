@@ -40,10 +40,10 @@ const getDetail = async (music: Music) => {
     }),
   ]);
 
-  audioUrl = JSON.parse(audioUrl);
+  // audioUrl = JSON.parse(audioUrl);
   audioUrl = audioUrl.req_0.data.midurlinfo[0].purl;
   audioUrl = "http://ws.stream.qqmusic.qq.com/" + audioUrl;
-  lyric = JSON.parse(lyric);
+  // lyric = JSON.parse(lyric);
   lyric = lyric.lyric;
 
   const musicDetail: any = {

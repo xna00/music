@@ -12,7 +12,7 @@ const _request = (url: string, method, headers = {}, postData = {}) => {
   url = url.replace(hostname, "");
   const path = url;
   // console.log(protocol, use, method, hostname, path, headers);
-  return new Promise<string>((resolve, reject) => {
+  return new Promise<string | object>((resolve, reject) => {
     const request = use.request(
       {
         hostname,
@@ -31,8 +31,13 @@ const _request = (url: string, method, headers = {}, postData = {}) => {
           if (response.headers["content-encoding"] === "gzip") {
             buffer = zlib.gunzipSync(buffer);
           }
-          const data = buffer.toString();
-          resolve(data);
+          let data: any = buffer.toString();
+          try {
+            data = JSON.parse(data);
+          } catch (error) {
+          } finally {
+            resolve(data);
+          }
         });
         response.on("error", (err) => reject(err));
       }
