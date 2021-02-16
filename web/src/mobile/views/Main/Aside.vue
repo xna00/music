@@ -23,8 +23,9 @@ export default {
     const open = ref(false);
     const urlInput = ref<HTMLInputElement>();
     const importMix = () => {
-      if (!urlInput.value.value) {
+      if (!urlInput.value || !urlInput.value.value) {
         showToast("请输入url");
+        return;
       }
       _importMix(urlInput.value.value);
       open.value = false;
