@@ -32,7 +32,8 @@ export class MusicDetail extends Music {
 const sourceMap: { [k: string]: Source } = {
   netease,
   qq,
-  kuwo,
+  // 本地能用，服务器上用不了，因为 IP 被屏蔽了吗？
+  // kuwo,
 };
 export default {
   getSources() {
