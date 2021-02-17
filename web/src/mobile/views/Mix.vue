@@ -30,7 +30,7 @@ export default {
         <router-link to="/main">
           <Icon name="left" />
         </router-link>
-        <span class="mix-name ml-2">{{ mix?.name }}</span>
+        <span class="mix-name ml-2 text-ellipsis">{{ mix?.name }}</span>
         <div>
           <Icon name="search" class="mr-3" />
           <Icon name="3dot" />
@@ -54,7 +54,7 @@ export default {
             </ul>
           </div>
         </Dialog>
-        <Music :music="m">
+        <Music :music="m" class="flex-1">
           <template v-slot:list-item>
             <div class="list-item">
               <div @click="open = true">收藏到歌单</div>

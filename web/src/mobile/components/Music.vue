@@ -21,7 +21,7 @@ export default {
 }
 </style>
 <template>
-  <li class="music px-3 d-flex jc-between ai-center py-2 flex-1">
+  <li class="music px-3 d-flex jc-between ai-center py-2">
     <BottomSheet v-model:open="open">
       <template v-slot:header>
         <div class="px-3 py-2 fs-xl">
@@ -44,6 +44,7 @@ export default {
 <style lang="scss" scoped>
 .music {
   font-size: 20px;
+  overflow: hidden;
   > div {
     overflow: hidden;
     span {
