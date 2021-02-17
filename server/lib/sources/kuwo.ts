@@ -26,17 +26,11 @@ const getDetail = async (music) => {
     `http://antiserver.kuwo.cn/anti.s?response=url&rid=${music.id}&format=mp3&type=convert_url`
   );
   const rawId = music.id.split("_")[1];
-  const imageUrl = ((await http.get(
-    "http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=" +
-      rawId +
-      "&httpsStatus=1&reqId=da3ce2d0-ddd4-11ea-9717-19e58cc26384"
-  )) as any).data.songinfo.pic;
-
-  const lyricArray = ((await http.get(
-    "http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=" +
-      rawId +
-      "&httpsStatus=1&reqId=da3ce2d0-ddd4-11ea-9717-19e58cc26384"
-  )) as any).data.lrclist;
+  const data = ((await http.get(
+    `http://m.kuwo.cn/newh5app/api/mobile/v1/music/info/${rawId}`
+  )) as any).data;
+  const imageUrl = data.info.pic;
+  const lyricArray = data.lrc;
   const lyric = lyricArray.map((l) => `[${l.time}]${l.lineLyric}`).join("\n");
   return {
     ...music,
