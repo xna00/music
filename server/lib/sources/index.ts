@@ -1,5 +1,6 @@
 import netease from "./netease";
 import qq from "./qq";
+import kuwo from "./kuwo";
 import MusicModel from "../../models/Music";
 
 export class Source {
@@ -31,6 +32,7 @@ export class MusicDetail extends Music {
 const sourceMap: { [k: string]: Source } = {
   netease,
   qq,
+  kuwo,
 };
 export default {
   getSources() {
@@ -83,6 +85,7 @@ export default {
     if (!(id && source)) return false;
     console.log(true);
     const mix = await sourceMap[source].importMix(id);
+    if (!mix.music.length) return false;
     // console.log("mix---", mix);
     mix.music = await Promise.all(
       mix.music.map(async (m) => {
