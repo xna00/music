@@ -53,10 +53,30 @@ const getDetail = async (music: Music) => {
   };
   return musicDetail;
 };
-const importMix = async () => {
+const importMix = async (id: string) => {
+  const res: any = await http.get(
+    "https://api.qq.jsososo.com/songlist",
+    {
+      id,
+    },
+    {
+      "User-Agent":
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36 Edg/88.0.705.68",
+    }
+  );
+  const music = res.data.songlist.map((song) => {
+    return {
+      id: song.songmid,
+      source: "qq",
+      name: song.songname,
+      artists: song.singer.map((s) => s.name),
+      album: song.albumname,
+      imageUrl: `https://imgcache.qq.com/music/photo/album_300/76/300_albumpic_${song.albumid}_0.jpg`,
+    };
+  });
   return {
-    name: "",
-    music: [],
+    name: res.data.dissname,
+    music,
   };
 };
 const qq: Source = {

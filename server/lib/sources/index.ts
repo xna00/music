@@ -70,8 +70,17 @@ export default {
       const result = /(?<=playlist\/)[0-9]*(?=\/)/g.exec(url);
       if (!result || !result[0]) return false;
       id = result[0];
+    } else if (url.includes("qq.com")) {
+      source = "qq";
+      let result;
+      if ((result = /(?<=playlist\/)[0-9]*/g.exec(url))) {
+      } else if ((result = /(?<=id=)[0-9]*/g.exec(url))) {
+      } else {
+        return false;
+      }
+      id = result[0];
     }
-    if (!id) return false;
+    if (!(id && source)) return false;
     console.log(true);
     const mix = await sourceMap[source].importMix(id);
     // console.log("mix---", mix);
@@ -81,7 +90,6 @@ export default {
           source: m.source,
           id: m.id,
         });
-        console.log(music);
         if (!music) {
           music = await MusicModel.create(m);
         }
