@@ -50,17 +50,17 @@ export default {
     } else if (
       !(musicDetail.lyric && musicDetail.imageUrl && musicDetail.audioUrl)
     ) {
+      console.log("else if");
       let newMusicDetail = await sourceMap[music.source].getDetail(music);
-      musicDetail = await MusicModel.findByIdAndUpdate(
-        music._id,
-        newMusicDetail
-      );
+      await MusicModel.findByIdAndUpdate(music._id, newMusicDetail);
+      musicDetail = await MusicModel.findById(music._id);
     }
     return musicDetail;
   },
   async update(music: Music & { _id: string }) {
     let newMusicDetail = await sourceMap[music.source].getDetail(music);
-    return await MusicModel.findByIdAndUpdate(music._id, newMusicDetail);
+    await MusicModel.findByIdAndUpdate(music._id, newMusicDetail);
+    return await MusicModel.findById(music._id);
   },
   async importMix(url: string) {
     let id: string = "";
