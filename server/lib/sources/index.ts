@@ -1,6 +1,7 @@
 import netease from "./netease";
 import qq from "./qq";
 import kuwo from "./kuwo";
+import kugou from "./kugou";
 import MusicModel from "../../models/Music";
 
 export class Source {
@@ -33,6 +34,7 @@ const sourceMap: { [k: string]: Source } = {
   netease,
   qq,
   kuwo,
+  kugou,
 };
 export default {
   getSources() {
@@ -52,10 +54,9 @@ export default {
     } else if (
       !(musicDetail.lyric && musicDetail.imageUrl && musicDetail.audioUrl)
     ) {
-      console.log("else if");
       let newMusicDetail = await sourceMap[music.source].getDetail(music);
-      await MusicModel.findByIdAndUpdate(music._id, newMusicDetail);
-      musicDetail = await MusicModel.findById(music._id);
+      await MusicModel.findByIdAndUpdate(musicDetail._id, newMusicDetail);
+      musicDetail = await MusicModel.findById(musicDetail._id);
     }
     return musicDetail;
   },
