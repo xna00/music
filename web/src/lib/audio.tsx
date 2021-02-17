@@ -41,7 +41,7 @@ watch([playlist, index], async ([newPlaylist, newIndex]: any) => {
   currentMusic.value.image = (
     <img
       src={musicDetail.imageUrl}
-      style={{ width: "35px", borderRadius: "50%" }}
+      style={{ width: "35px", height: "35px", borderRadius: "50%" }}
     />
   );
   let lyric: { time: number; text: string }[] = musicDetail.lyric
