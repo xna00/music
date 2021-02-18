@@ -30,7 +30,9 @@ const search = async (keyword: string) => {
           name: p.part,
           album: res[i].title,
           artists: res[i].author.split("/"),
-          imageUrl: res[i].pic,
+          imageUrl: `/api/proxy/blAudio/${Buffer.from(res[i].pic).toString(
+            "base64"
+          )}`,
         };
       })
     );
