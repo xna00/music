@@ -2,6 +2,7 @@ import netease from "./netease";
 import qq from "./qq";
 import kuwo from "./kuwo";
 import kugou from "./kugou";
+import bilibili from "./bilibili";
 import MusicModel from "../../models/Music";
 
 export class Source {
@@ -35,6 +36,7 @@ const sourceMap: { [k: string]: Source } = {
   qq,
   kuwo,
   kugou,
+  bilibili,
 };
 export default {
   getSources() {
