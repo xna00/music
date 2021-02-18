@@ -2,15 +2,12 @@ import http = require("http");
 import https = require("https");
 import querystring = require("querystring");
 import zlib = require("zlib");
+import { parseUrl } from "./parseUrl";
 // let real = _http;
 
 const _request = (url: string, method, headers = {}, postData = {}) => {
-  const protocol = url.substring(0, url.indexOf("://"));
-  url = url.replace(protocol + "://", "");
+  const { protocol, hostname, path } = parseUrl(url);
   const use = protocol === "http" ? http : https;
-  const hostname = url.substring(0, url.indexOf("/"));
-  url = url.replace(hostname, "");
-  const path = url;
   // console.log(protocol, use, method, hostname, path, headers);
   return new Promise<string | object>((resolve, reject) => {
     const request = use.request(

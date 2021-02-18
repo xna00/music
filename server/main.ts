@@ -1,9 +1,10 @@
 import express = require("express");
 import db from "./plugins/db";
-import user from "./routes/mix";
 import errorHandler from "./middleware/errorHandler";
 import cors from "cors";
 import fs from "fs";
+import user from "./routes/mix";
+import proxy from "./routes/proxy";
 
 const app = express();
 
@@ -22,6 +23,7 @@ db(app);
 require("./routes/music")(app);
 require("./routes/auth")(app);
 user(app);
+proxy(app);
 app.use(errorHandler());
 app.listen(3000, () => {
   console.log("http://localhost:3000");
