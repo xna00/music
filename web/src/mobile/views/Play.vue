@@ -145,6 +145,7 @@ export default {
     > img {
       width: 60vw;
       height: 60vw;
+      object-fit: cover;
       border-radius: 50%;
       border: 3px solid #676666;
       animation: rotate 30s linear infinite;
