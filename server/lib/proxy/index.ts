@@ -5,7 +5,6 @@ import { parseUrl } from "../http/parseUrl";
 const proxy = (req: Request, res: Response) => {
   const { category, encoded_url } = req.params;
   const url = Buffer.from(encoded_url, "base64").toString();
-  // console.log(category, url);
   const { protocol, hostname, path } = parseUrl(url);
   const use = protocol === "http" ? http : https;
   if (category === "blAudio") {
@@ -28,11 +27,9 @@ const proxy = (req: Request, res: Response) => {
             response.headers
           );
           response.on("data", (data) => {
-            console.log("data");
             res.write(data);
           });
           response.on("end", () => {
-            console.log("end");
             res.end();
           });
         }
