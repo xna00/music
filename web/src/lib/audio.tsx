@@ -141,14 +141,11 @@ const play = () => {
   audio.play();
 };
 function playFromSearchPage(music: Music) {
-  if (
-    findMusic(music, {
-      music: playlist.value,
-    }) >= 0
-  ) {
-    index.value = findMusic(music, {
-      music: playlist.value,
-    });
+  const newIndex = playlist.value.findIndex(
+    (m) => m.id === music.id && m.source === music.source
+  );
+  if (newIndex >= 0) {
+    index.value = newIndex;
     return;
   }
   playlist.value.splice(index.value + 1, 0, music);

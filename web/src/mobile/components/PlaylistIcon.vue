@@ -17,7 +17,7 @@ export default {
 </script>
 <template>
   <Icon @click.stop="listOpen = true" name="list1" />
-  <BottomSheet v-model:open="listOpen">
+  <BottomSheet v-model:open="listOpen" height="50vh">
     <template v-slot:header>
       <div class="px-3 fs-xl">列表 ({{ playlist.length }})</div>
     </template>
@@ -26,10 +26,15 @@ export default {
         v-for="(m, i) in playlist"
         @click="index = i"
         class="px-3 py-2 fs-lg"
-        :class="{ hit: index == i }"
+        :class="{ playing: index == i }"
       >
         {{ m.name }}
       </li>
     </ul>
   </BottomSheet>
 </template>
+<style lang="scss" scoped>
+li.playing {
+  color: red;
+}
+</style>
