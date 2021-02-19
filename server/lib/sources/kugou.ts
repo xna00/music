@@ -3,8 +3,7 @@ import { Source } from ".";
 import http from "../http";
 const sourceName = "kugou";
 const search = async (keyword: string) => {
-  const res = //   console.log(res);
-  ((await http.get(
+  const res = ((await http.get(
     "http://mobilecdn.kugou.com/api/v3/search/song?format=json&page=1&pagesize=10&showtype=1",
     {
       keyword,

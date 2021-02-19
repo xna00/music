@@ -8,7 +8,7 @@ import { parseUrl } from "./parseUrl";
 const _request = (url: string, method, headers = {}, postData = {}) => {
   const { protocol, hostname, path } = parseUrl(url);
   const use = protocol === "http" ? http : https;
-  // console.log(protocol, use, method, hostname, path, headers);
+  // console.log(protocol, method, hostname, path, headers);
   return new Promise<string | object>((resolve, reject) => {
     const request = use.request(
       {
