@@ -88,7 +88,12 @@ const getDetail = async (music: Music) => {
   ]);
   // detail = JSON.parse(detail);
   // lyric = JSON.parse(lyric);
-  lyric = lyric.lrc.lyric;
+  console.log(lyric);
+  if (lyric.nolyric) {
+    lyric = "[0]无歌词";
+  } else {
+    lyric = lyric.lrc.lyric;
+  }
   const song = detail.songs[0];
 
   const musicDetail: MusicDetail = {
