@@ -3,7 +3,10 @@ import http from "http";
 import https from "https";
 import { parseUrl } from "../http/parseUrl";
 const proxy = (req: Request, res: Response) => {
-  const { category, encoded_url } = req.params;
+  const { category } = req.params;
+  let { encoded_url } = req.params;
+  // url safe
+  encoded_url = encoded_url.replace(/-/g, "+").replace(/_/g, "/");
   const url = Buffer.from(encoded_url, "base64").toString();
   const { protocol, hostname, path } = parseUrl(url);
   const use = protocol === "http" ? http : https;

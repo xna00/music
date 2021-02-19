@@ -49,8 +49,9 @@ const getDetail = async (music: Music & { imageUrl: string }) => {
     fnver: 0,
     fourk: 1,
   })) as any).data.dash.audio[0].baseUrl;
-  const encoded_url = Buffer.from(res).toString("base64");
-
+  let encoded_url = Buffer.from(res).toString("base64");
+  // url safe
+  encoded_url = encoded_url.replace(/\//g, "_").replace(/\+/g, "-");
   return {
     ...music,
     audioUrl: `/api/proxy/blAudio/${encoded_url}`,
