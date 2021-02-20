@@ -71,7 +71,12 @@ export default {
         <router-link to="/main">
           <Icon name="left" />
         </router-link>
-        <input ref="input" type="text" class="flex-1 mx-3" />
+        <input
+          type="text"
+          class="flex-1 mx-3"
+          ref="input"
+          @keydown.enter="search"
+        />
         <Icon @click="search" name="search" />
       </Header>
     </template>
