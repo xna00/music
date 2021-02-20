@@ -18,7 +18,7 @@ import {
   changeMode,
 } from "../../lib/audio";
 import { likeMusic, unLikeMusic, isLikedMusic } from "../../lib/mix";
-import { computed, ref } from "vue";
+import { computed, onMounted, onUpdated, ref } from "vue";
 import Lyric from "./Play/Lyric.vue";
 import timeFormat from "../../lib/timeFormat";
 export default {
@@ -37,7 +37,24 @@ export default {
 
     const imageVisible = ref(true);
     const showToggle = () => (imageVisible.value = !imageVisible.value);
-
+    const nameDiv = ref<HTMLDivElement>();
+    onUpdated(() => {
+      if (!nameDiv.value) return;
+      nameDiv.value.classList.remove("marquee");
+      (nameDiv.value
+        .firstElementChild as HTMLSpanElement)?.nextSibling?.remove();
+      const firstChild = nameDiv.value.firstElementChild as HTMLSpanElement;
+      const parent = nameDiv.value.parentElement;
+      if (
+        !firstChild ||
+        !parent ||
+        firstChild.offsetWidth <= parent.offsetWidth
+      )
+        return;
+      const secondChild = firstChild.cloneNode(true);
+      nameDiv.value.appendChild(secondChild);
+      nameDiv.value.classList.add("marquee");
+    });
     return {
       modeIcon,
       currentMusic,
@@ -57,6 +74,7 @@ export default {
       likeMusic,
       unLikeMusic,
       isLikedMusic,
+      nameDiv,
     };
   },
 };
@@ -71,9 +89,13 @@ export default {
       <template v-slot:header>
         <Header class="pt-1">
           <Icon @click="$router.back" name="left" />
-          <div class="info">
-            <span>{{ currentMusic.name }}</span>
-            <span>{{ currentMusic.artists.join("/") }}</span>
+          <div class="info flex-1">
+            <div class="name" ref="nameDiv">
+              <span>{{ currentMusic.name }}</span>
+            </div>
+            <span class="text-ellipsis">{{
+              currentMusic.artists.join("/")
+            }}</span>
           </div>
           <Icon />
         </Header>
@@ -122,6 +144,17 @@ export default {
   </div>
 </template>
 <style lang="scss" scoped>
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  95% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
 @keyframes rotate {
   from {
     transform: rotateZ(0);
@@ -168,11 +201,20 @@ export default {
 .info {
   margin-left: 8px;
   margin-right: auto;
-  span {
-    display: block;
-    &:first-child {
-      font-size: 18px;
+  overflow: hidden;
+  > .name {
+    display: inline-block;
+    font-size: 18px;
+    white-space: nowrap;
+    &.marquee {
+      animation: 15s marquee infinite linear;
+      > span {
+        margin-right: 20vw;
+      }
     }
+  }
+  > span {
+    display: block;
     &:last-child {
       font-size: 14px;
     }
