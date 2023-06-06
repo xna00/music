@@ -1,7 +1,7 @@
 export default (app) => {
   const mongoose = require("mongoose");
   mongoose.set("useCreateIndex", true);
-  mongoose.connect("mongodb://127.0.0.1:27017/music", {
+  mongoose.connect("mongodb+srv://xna:141478994xna@cluster0.d5zfkp7.mongodb.net/music?retryWrites=true&w=majority", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
